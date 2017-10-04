@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{template}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <script language="JavaScript">
+            function enviardadosusuario() {
+
+                if (document.getElementById("descricao").value == "") {
+                    alert("Preencha campo nome do usuário corretamente!");
+                    document.getElementById("descricao").focus();
+                    return false;
+                }
+
+                if (document.getElementById("login").value == "") {
+                    alert("Preencha campo login do usuário corretamente!");
+                    document.getElementById("login").focus();
+                    return false;
+                }
+                if (document.getElementById("funcao").value == "") {
+                    alert("Preencha campo funcao do usuário corretamente!");
+                    document.getElementById("funcao").focus();
+                    return false;
+                }
+                if (document.getElementById("senha").value == "") {
+                    alert("Preencha campo senha do usuário corretamente!");
+                    document.getElementById("senha").focus();
+                    return false;
+                }
+                if (document.getElementById("cdm").value == "") {
+                    alert("Preencha campo unidade do usuário corretamente!");
+                    document.getElementById("cdm").focus();
+                    return false;
+                }
+
+                if (document.getElementById("senha").value != document.getElementById("senha2").value) {
+                    alert("Senhas não coincidem!");
+                    document.getElementById("senha").focus();
+                    return false;
+                }
+
+
+                return true;
+            }
+
+        </script>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+
+            <!--formulário-->
+            <form class="form-horizontal" method="post" th:action="@{/usuario}" th:object="${usuario}"  name="dados" onSubmit="return enviardadosusuario();">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Cadastro Usuário </h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div class="form-group">
+                            <label for="descricao" class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-4">
+                                <input type="text" th:field="*{nome}" class="form-control" id="descricao" name="descricao"/>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label for="status" class="col-sm-2 control-label">Perfil de Acesso</label>
+                            <div class="col-sm-2">
+                                <select id="funcao" th:field="*{perfilAcesso}" class="form-control">
+                                    <option value="">Selecione...</option>
+                                    <option th:each="perfil : ${perfils}" th:value="${perfil.id}" th:text="${perfil.descricao}">PERFIL</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status" class="col-sm-2 control-label">Selecione o CDM</label>
+                            <div class="col-sm-2">
+                                <select th:field="*{unidade}" id="cdm" class="form-control">
+                                    <option value="">Selecione...</option>
+                                    <option th:each="unidade : ${unidades}" th:value="${unidade.id}" th:text="${unidade.nome}">UNIDADE</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login" class="col-sm-2 control-label">Login</label>
+                            <div class="col-sm-2">
+                                <input type="text" th:field="*{login}" class="form-control" id="login" name="login"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="senha" class="col-sm-2 control-label">Senha</label>
+                            <div class="col-sm-2">
+                                <input type="password" th:field="*{senha}" class="form-control" id="senha" name="senha"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="senha2" class="col-sm-2 control-label">Confirmar Senha</label>
+                            <div class="col-sm-2">
+                                <input type="password" class="form-control" id="senha2" name="senha2"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary">Gravar</button>
+                                <a th:if="${usuario.id != null}" th:href="@{/usuario}" class="btn btn-danger">Cancelar</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <!--formulário-->
+
+
+            <form class="form-horizontal">
+                <div class="campobusca">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control filtro-input" id="busca" ng-model="busca" placeholder="Consulta Registro"/>
+                    </div>
+                </div>
+                </br>
+            </form>
+
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Perfil de Acesso</th>
+                        <th>Cdm</th>
+                        <th>Operações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="filtro-campo" th:each="p : ${usuarios}">
+                        <td th:text="${p.nome}">NOME</td>
+                        <td th:text="${p.perfilAcesso.descricao}">PERFIL</td>
+                        <td th:text="${p.unidade.nome}">CDM</td>
+                        <td>
+                            <form th:id="'formExcluir'+${p.id}" method="post" th:action="@{/usuario/{id}(id=${p.id})}">
+                                <a th:href="@{/usuario/editar/{id}(id = ${p.id})}"  class="btn btn-warning">EDITAR</a> 
+
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <button type="submit" class="btn btn-danger"
+                                        th:onclick="'confirmarExclusao(event, '+${p.id}+', \''+${p.nome}+'\')'">EXCLUIR</button>
+
+                            </form>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+        <section layout:fragment="js-extra">
+            <link rel="stylesheet" type="text/css" th:href="@{css/sweetalert/sweetalert.css}" media="screen,projection" />
+            <script th:src="@{js/sweetalert/sweetalert.min.js}"></script>
+            <script th:src="@{js/sweetalert/confirmacaoExclusao.js}"></script>
+        </section>
+    </body>
+</html>
