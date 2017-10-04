@@ -32,6 +32,24 @@ public class Unidade implements Serializable {
     @Column(columnDefinition = "character varying (30)")
     private String cnpj;
 
+    @Column(columnDefinition = "character varying (200)")
+    private String endereco;
+    @Column(columnDefinition = "character varying (25)")
+    private String numero;
+    @Column(columnDefinition = "character varying (50)")
+    private String cidade;
+    @Column(columnDefinition = "character varying (30)")
+    private String estado;
+    @Column(columnDefinition = "character varying (25)")
+    private String cep;
+    @Column(columnDefinition = "character varying (200)")
+    private String contato;
+    @Column(columnDefinition = "character varying (20)")
+    private String telefone;
+    @Column(columnDefinition = "character varying (50)")
+    private String email;
+    
+    
     @NotNull
     private Boolean ativo;
 
@@ -81,7 +99,72 @@ public class Unidade implements Serializable {
         this.ativo = ativo;
     }
 
-    @Override
+    
+    public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public String getContato() {
+		return contato;
+	}
+
+	public void setContato(String contato) {
+		this.contato = contato;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 7;
         hash = 43 * hash + Objects.hashCode(this.id);
