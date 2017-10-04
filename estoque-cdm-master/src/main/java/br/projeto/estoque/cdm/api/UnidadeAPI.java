@@ -29,14 +29,14 @@ public class UnidadeAPI {
     @Autowired
     FaixaAtendimentoService atendimentoService;
 
-    @GetMapping(value = "/consulta/{cep}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/consulta/{cep}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Unidade>> pesquisaUnidadeCEP(@PathVariable String cep) {
 
-        cep = cep.replaceAll("-", "").replaceAll(".", "");
+        String cepDesformatado = cep.replaceAll("\\-", "").replaceAll("\\.", "");
         List<FaixaAtendimento> faixa = new ArrayList<>();
         List<Unidade> unidades = new ArrayList<>();
         try {
-            faixa = this.atendimentoService.filtarCep(cep);
+            faixa = this.atendimentoService.filtarCep(cepDesformatado);
             for (FaixaAtendimento at : faixa) {
                 unidades.add(at.getUnidade());
             }
