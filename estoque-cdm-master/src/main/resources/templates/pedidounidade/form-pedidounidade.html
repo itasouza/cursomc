@@ -17,6 +17,20 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Pedido de Compra </h3>
                     </div>
+                    
+                    <div id="print" th:if="${pedido.id != null}" >
+		                <div class="panel panel-default">
+		                    <div class="panel-heading"><small th:text="${' Pedido N: '+pedido.id}"> Pedido N: 4524</small></div>
+		                    <div class="panel-heading"><small th:text="${' Nome do Usuario : '+ pedido.usuario.nome}"> Nome do Cliente : Maria jose da Silva </small></div>
+		                    <div class="panel-heading"><small th:text="${' Unidade : ' + pedido.unidade.nome}"> Endereço : Rua Mario de Souza 45 </small></div>
+		                    <div class="panel-heading"><small th:text="${' Data Pedido : '+#dates.format(pedido.dataPedido, 'dd-MM-yyyy')}"> Estado : São Paulo </small></div>
+		                    <div class="panel-heading"><small th:text="${' Data Baixa : '+ (pedido.dataBaixa != null ? #dates.format(pedido.dataBaixa, 'dd-MM-yyyy') : 'sem registro')}"> Estado : São Paulo </small></div>
+		
+		
+		                    <div class="panel-heading"><small th:text="${' Status : '+pedido.status}"> Cidade : Osasco </small></div>
+		                    <div class="panel-heading"><small th:text="${' Valor : '+pedido.valorTotal}"> Bairro : Centro </small></div>	
+		                </div>
+		            </div>
 
                     <div class="panel-body">
 

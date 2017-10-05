@@ -84,6 +84,12 @@ public class PedidoUnidadeController {
 		return model;
 	}
 
+	/**
+	 * Remove apenas da memoria o produto de um pedido.
+	 * @param id
+	 * @param usuarioLogado
+	 * @return
+	 */
 	@GetMapping("/remover/{id}")
 	public ModelAndView removerProdutoPedido(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
 		Long idPedido = usuarioLogado.getPedido().getId();
@@ -97,6 +103,18 @@ public class PedidoUnidadeController {
 		}
 
 		return model;
+	}
+	
+	/**
+	 * Remove o pedido como um todo.
+	 * @param id
+	 * @param usuarioLogado
+	 * @return
+	 */
+	@PostMapping("/excluir/{id}")
+	public ModelAndView removerPedido(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
+		this.pedidoUnidadeService.deletarPorId(id);
+		return form(usuarioLogado);
 	}
 
 	@PostMapping("/produto")
