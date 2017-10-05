@@ -61,9 +61,9 @@ public class PedidoUnidade implements Serializable {
     Calendar dataBaixa;
 
 //    situacao character varying(1) NOT NULL,
-    @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
 //    @Column(columnDefinition = "character varying(1)")
-    StatusPedido status;
+    String status;
 
 //  valor_total numeric(10,2) NOT NULL,
     @NotNull
@@ -144,11 +144,11 @@ public class PedidoUnidade implements Serializable {
         this.dataBaixa = dataBaixa;
     }
 
-    public StatusPedido getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusPedido status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

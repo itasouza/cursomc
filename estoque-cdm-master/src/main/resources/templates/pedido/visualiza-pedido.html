@@ -30,12 +30,13 @@
                     </thead>
                     <tbody>
                         <tr th:each="p : ${produtos}">
-                            <td th:text="${p.produto.nome}"></td>
-                            <td th:text="${p.quantidade}" ></td>
+                            <td th:text="${p.descricaoItem}"></td>
+                            <td th:text="${p.qtde}" ></td>
                         </tr>
                     </tbody>
                 </table>
-
+              </div>
+ 
                 <div class="panel panel-default">
                     <div class="panel-heading">
                     </div>
@@ -47,7 +48,7 @@
                                 <a th:href="@{/pedidos}" class="btn btn-warning">
                                     Retornar
                                 </a>
-                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null}" class="btn btn-danger" type="submit">  Pedido entreque</button>
+                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null}" class="btn btn-danger" type="submit">  Pedido entreque ao cliente?</button>
                             </div>
                         </form>
 
@@ -55,7 +56,7 @@
 
                 </div>
 
-            </div>
+           
             <small th:if="${pedido==null}">Nenhum pedido localizado</small>
             <section layout:fragment="js-extra">
                 <script th:src="@{/js/print.js}"></script>        

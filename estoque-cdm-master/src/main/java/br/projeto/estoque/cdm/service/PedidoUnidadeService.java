@@ -6,7 +6,6 @@
 package br.projeto.estoque.cdm.service;
 
 import br.projeto.estoque.cdm.model.PedidoUnidade;
-import br.projeto.estoque.cdm.model.StatusPedido;
 import br.projeto.estoque.cdm.model.Unidade;
 import br.projeto.estoque.cdm.repository.PedidoUnidadeRepository;
 import java.util.List;
@@ -52,7 +51,7 @@ public class PedidoUnidadeService implements Services<PedidoUnidade> {
         return this.repository.findByUnidade(unidade);
     }
 
-    public void atualizaStatus(StatusPedido statusPedido, Long id) {
+    public void atualizaStatus(String statusPedido, Long id) {
         this.repository.updateStatusWhereId(statusPedido, id);
     }
 }

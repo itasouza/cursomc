@@ -66,6 +66,7 @@ public class EstoqueUnidadeController {
         try {
             if (estoque.getId() == null) {
                 System.out.println("Novo registro");
+                estoque.setEstoqueFisico(0);
                 estoque = this.estoqueUnidadeService.salvarOuAtualizar(estoque);
                 msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Estoque #" + estoque.getId() + " salvo com sucesso");
             } else if (estoque.getEstoqueFisico() > 0) {

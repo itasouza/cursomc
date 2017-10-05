@@ -13,7 +13,6 @@ import br.projeto.estoque.cdm.model.PedidoUnidade;
 import br.projeto.estoque.cdm.model.Produto;
 import br.projeto.estoque.cdm.model.ProdutoModal;
 import br.projeto.estoque.cdm.model.ProdutoUnidade;
-import br.projeto.estoque.cdm.model.StatusPedido;
 import br.projeto.estoque.cdm.model.Usuario;
 import br.projeto.estoque.cdm.service.EstoqueUnidadeService;
 import br.projeto.estoque.cdm.service.PedidoUnidadeService;
@@ -141,7 +140,7 @@ public class PedidoUnidadeController {
         try {
             pedido.setId(null);
             pedido.setUsuario(usuarioLogado);
-            pedido.setStatus(StatusPedido.ABERTO);
+            pedido.setStatus("ABERTO");
             pedido.setDataPedido(Calendar.getInstance());
             pedido.setUnidade(usuarioLogado.getUnidade());
             ArrayList<ProdutoUnidade> produtoUnidades = new ArrayList<>();
@@ -184,7 +183,7 @@ public class PedidoUnidadeController {
                 }
             }
 
-            this.pedidoUnidadeService.atualizaStatus(StatusPedido.FINALIZADO, id);
+            this.pedidoUnidadeService.atualizaStatus("FINALIZADO", id);
             msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + id + " finalizado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro " + e);

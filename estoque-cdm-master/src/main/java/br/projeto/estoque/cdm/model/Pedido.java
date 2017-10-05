@@ -49,8 +49,7 @@ public class Pedido implements Serializable {
     @Column(name = "dt_baixa_pedido", columnDefinition = "timestamp without time zone")
     String dataBaixaPedido;
 
-    @Enumerated(EnumType.STRING)
-    StatusPedido situacao;
+    String situacao;
 
     @NotNull
     @Column(name = "valor_total", columnDefinition = "numeric(10,2)")
@@ -91,10 +90,11 @@ public class Pedido implements Serializable {
     @Column(name = "endereco_alt", columnDefinition = "text")
     String endereco;
 
-    @Enumerated(EnumType.STRING)
-    StatusPedido status;
+//    @Enumerated(EnumType.STRING)
+    String status;
 
     public Pedido() {
+        this.status = "ABERTO";
     }
 
     public Long getId() {
@@ -133,11 +133,11 @@ public class Pedido implements Serializable {
         return dataPedido;
     }
 
-    public StatusPedido getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusPedido status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -153,11 +153,11 @@ public class Pedido implements Serializable {
         this.dataBaixaPedido = dataBaixaPedido;
     }
 
-    public StatusPedido getSituacao() {
+    public String getSituacao() {
         return situacao;
     }
 
-    public void setSituacao(StatusPedido situacao) {
+    public void setSituacao(String situacao) {
         this.situacao = situacao;
     }
 

@@ -50,4 +50,8 @@ public class UnidadeService implements Services<Unidade> {
         return this.repository.findByPedidoEspecial(pedidoEspecial);
     }
 
+    public List<Unidade> buscarAtendimentoEspecial() {
+        return this.repository.findByPedidoEspecial(true);
+    }
+
 }

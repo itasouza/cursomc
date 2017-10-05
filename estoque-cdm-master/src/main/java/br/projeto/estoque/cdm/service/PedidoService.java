@@ -7,7 +7,6 @@ package br.projeto.estoque.cdm.service;
 
 import br.projeto.estoque.cdm.model.FaixaAtendimento;
 import br.projeto.estoque.cdm.model.Pedido;
-import br.projeto.estoque.cdm.model.StatusPedido;
 import br.projeto.estoque.cdm.model.Unidade;
 import br.projeto.estoque.cdm.repository.PedidoRepository;
 import java.util.List;
@@ -56,41 +55,41 @@ public class PedidoService implements Services<Pedido> {
         this.repository.delete(obj);
     }
 
-//    @Scheduled(fixedDelay = 60000L) // 10 min
-//    public void registrarUnidadeEmNovosPedidos() {
-//        List<Pedido> pedidos = this.repository.findByUnidade(null);
-//        System.out.println(pedidos.size() + " pedidos sem unidade");
-//        for (Pedido p : pedidos) {
-//            List<FaixaAtendimento> faixa = this.atendimentoService.filtarCep(p.getCliente().getCep());
-//            if (faixa != null && (!faixa.isEmpty())) {
-//                // achou um cdm pra essa região
-//                if (faixa.get(0).getUnidade().getAtivo()) {
-//                    this.repository.setUnidadeWhere(faixa.get(0).getUnidade(), p);
-//                } else {
-//                    System.out.println("Unidade que atende esta região está desativada");
-//                }
-//            } else {
-//                // nao achou cdm
-//                List<Unidade> cdm = this.unidadeService.buscarAtendePedidoEspecial(true);
-//                if (cdm != null && (!cdm.isEmpty())) {
-//                    // achou cdm atende pedido especial
-//                    if (cdm.get(0).getAtivo()) {
-//                        this.repository.setUnidadeWhere(cdm.get(0), p);
-//                    } else {
-//                        System.out.println("Unidade que atende esta região está desativada");
-//                    }
-//                } else {
-//                    System.out.println("Nenhuma unidade para atender o pedido " + p.getId());
-//                }
-//            }
-//        }
-//    }
+    public void registrarUnidadeEmNovosPedidos() {
+        List<Pedido> pedidos = this.repository.findByUnidade(null);
+        System.out.println(pedidos.size() + " pedidos sem unidade");
+        for (Pedido p : pedidos) {
+            List<FaixaAtendimento> faixa = this.atendimentoService.filtarCep(p.getCliente().getCep());
+            if (faixa != null && (!faixa.isEmpty())) {
+                // achou um cdm pra essa região
+                if (faixa.get(0).getUnidade().getAtivo()) {
+                    this.repository.setUnidadeWhere(faixa.get(0).getUnidade(), p);
+                } else {
+                    System.out.println("Unidade que atende esta região está desativada");
+                }
+            } else {
+                // nao achou cdm
+                List<Unidade> cdm = this.unidadeService.buscarAtendePedidoEspecial(true);
+                if (cdm != null && (!cdm.isEmpty())) {
+                    // achou cdm atende pedido especial
+                    if (cdm.get(0).getAtivo()) {
+                        this.repository.setUnidadeWhere(cdm.get(0), p);
+                    } else {
+                        System.out.println("Unidade que atende esta região está desativada");
+                    }
+                } else {
+                    System.out.println("Nenhuma unidade para atender o pedido " + p.getId());
+                }
+            }
+        }
+    }
 
     public List<Pedido> buscarPorUnidade(Unidade unidade) {
+        System.out.println("INICIANDO BUSCA PELA UNIDADE");
         return this.repository.findByUnidade(unidade);
     }
 
-    public void atualizarStatus(Long id, StatusPedido statusPedido) {
+    public void atualizarStatus(Long id, String statusPedido) {
         this.repository.updateStatusWhereId(statusPedido, id);
     }
 }

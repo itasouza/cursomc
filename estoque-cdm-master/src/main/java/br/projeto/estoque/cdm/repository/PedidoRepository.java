@@ -6,7 +6,6 @@
 package br.projeto.estoque.cdm.repository;
 
 import br.projeto.estoque.cdm.model.Pedido;
-import br.projeto.estoque.cdm.model.StatusPedido;
 import br.projeto.estoque.cdm.model.Unidade;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -33,5 +32,5 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Modifying
     @Transactional
     @Query("UPDATE pedidos p SET p.status = :status WHERE p.id = :id")
-    public void updateStatusWhereId(@Param("status") StatusPedido status, @Param("id") Long id);
+    public void updateStatusWhereId(@Param("status") String status, @Param("id") Long id);
 }

@@ -11,7 +11,6 @@ import br.projeto.estoque.cdm.model.ItensPedido;
 import br.projeto.estoque.cdm.model.Pedido;
 import br.projeto.estoque.cdm.model.Produto;
 import br.projeto.estoque.cdm.model.ProdutoUnidade;
-import br.projeto.estoque.cdm.model.StatusPedido;
 import br.projeto.estoque.cdm.model.Usuario;
 import br.projeto.estoque.cdm.service.ItensPedidoService;
 import br.projeto.estoque.cdm.service.PedidoService;
@@ -30,7 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * 
+ *
  */
 @Controller
 @RequestMapping("/pedidos")
@@ -62,23 +61,19 @@ public class PedidoClienteController {
     @GetMapping("/{id}")
     public ModelAndView visualizar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
         ModelAndView model = new ModelAndView("pedido/visualiza-pedido");
-        ArrayList<ProdutoUnidade> produtos = new ArrayList<>();
 
         List<ItensPedido> itens = this.itensPedidoService.buscarPorPedido(id);
 
-        System.out.println("Retornou " + itens.size());
-
-        for (ItensPedido ip : itens) {
-            Produto p = this.produtoService.buscarPorId(ip.getIdProduto());
-            ProdutoUnidade produtoSelecao = new ProdutoUnidade(p, ip.getQtde().intValue());
-            if (p != null) {
-                System.out.println("Produto achado " + p.getNome());
-                produtos.add(produtoSelecao);
-            }
-        }
-
+//        for (ItensPedido ip : itens) {
+//            Produto p = this.produtoService.buscarPorId(ip.getIdProduto());
+//            ProdutoUnidade produtoSelecao = new ProdutoUnidade(p, ip.getQtde().intValue());
+//            if (p != null) {
+//                produtos.add(produtoSelecao);
+//            }
+//        }
+        System.out.println("Buscando pedido numero " + id);
         model.addObject("pedido", this.pedidoService.buscarPorId(id));
-        model.addObject("produtos", produtos);
+        model.addObject("produtos", itens);
         model.addObject("user", usuarioLogado);
         return model;
     }
@@ -88,7 +83,7 @@ public class PedidoClienteController {
         ModelAndView model = new ModelAndView("redirect:/pedidos");
 
         try {
-            this.pedidoService.atualizarStatus(id, StatusPedido.FINALIZADO);
+            this.pedidoService.atualizarStatus(id, "FINALIZADO");
             this.msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número #" + id + " finalizado com sucesso.");
         } catch (Exception e) {
             System.out.println("Erro " + e);

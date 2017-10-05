@@ -12,11 +12,11 @@
 //                    document.getElementById("produto").focus();
 //                    return false;
 //                }
-                if (document.getElementById("unidade").selectedIndex == "") {
-                    alert("Selecione a Unidade corretamente!");
-                    document.getElementById("unidade").focus();
-                    return false;
-                }
+//                if (document.getElementById("unidade").selectedIndex == "") {
+//                    alert("Selecione a Unidade corretamente!");
+//                    document.getElementById("unidade").focus();
+//                    return false;
+//                }
 
                 if (document.getElementById("qtdestoque").value == "") {
                     alert("Preencha campo Quantidade de produto!");
@@ -68,17 +68,17 @@
                             <label for="status" class="col-sm-2 control-label">Selecione a unidade</label>
                             <div class="col-sm-2">
                                 <select th:field="*{unidade}" id="unidade" class="form-control" name="unidade">
-                                    <option value="">Selecione...</option>
+                                    <!--<option value="">Selecione...</option>-->
                                     <option th:each="und : ${unidades}" th:value="${und.id}" th:text="${und.nome}">UNIDADE</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label th:if="*{id == null }" for="qtdestoque" class="col-sm-2 control-label">Quantidade Estoque</label>
+                            <label th:if="*{id == null }" for="qtdestoque"  class="col-sm-2 control-label">Quantidade Estoque</label>
                             <label th:if="*{id != null }" for="qtdestoque" class="col-sm-2 control-label">Estoque perdido</label>
                             <div class="col-sm-2">
-                                <input type="text" th:field="*{estoqueFisico}" class="form-control" id="qtdestoque" name="qtdestoque"/>
+                                <input type="text" th:field="*{estoqueFisico}" readonly class="form-control" id="qtdestoque" name="qtdestoque"/>
                             </div>
                         </div>
 

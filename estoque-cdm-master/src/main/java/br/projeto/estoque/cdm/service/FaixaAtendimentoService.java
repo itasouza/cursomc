@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * 
+ *
  */
 @Service
 public class FaixaAtendimentoService implements Services<FaixaAtendimento> {
@@ -50,6 +50,8 @@ public class FaixaAtendimentoService implements Services<FaixaAtendimento> {
     }
 
     public List<FaixaAtendimento> filtarCep(String cep) {
+//        Integer num = Integer.parseInt(cep);
+//        System.out.println("CEP " + num + " - " + cep);
         return this.repository.findByCepFinalGreaterThanEqualAndCepInicialLessThanEqual(cep, cep);
     }
 

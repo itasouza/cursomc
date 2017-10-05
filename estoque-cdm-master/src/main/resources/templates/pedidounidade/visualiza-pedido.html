@@ -53,7 +53,7 @@
                                 <a th:href="@{/pedidosunidade}" class="btn btn-warning">
                                     Retornar
                                 </a>
-                                <button class="btn btn-danger" type="submit">  Pedido Recebido?</button>
+                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null }" class="btn btn-danger" type="submit">  Pedido Recebido?</button>
                             </div>
                         </form>
 
