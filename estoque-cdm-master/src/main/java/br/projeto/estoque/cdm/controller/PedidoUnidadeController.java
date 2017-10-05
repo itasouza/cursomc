@@ -8,7 +8,6 @@ package br.projeto.estoque.cdm.controller;
 import br.projeto.estoque.cdm.mensagem.FormMensagem;
 import br.projeto.estoque.cdm.mensagem.TipoMensagem;
 import br.projeto.estoque.cdm.model.EstoqueUnidade;
-import br.projeto.estoque.cdm.model.Pedido;
 import br.projeto.estoque.cdm.model.PedidoUnidade;
 import br.projeto.estoque.cdm.model.Produto;
 import br.projeto.estoque.cdm.model.ProdutoModal;
@@ -20,6 +19,7 @@ import br.projeto.estoque.cdm.service.ProdutoService;
 import br.projeto.estoque.cdm.service.ProdutoUnidadeService;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -55,7 +55,7 @@ public class PedidoUnidadeController {
 //    PedidoUnidade pedido = new PedidoUnidade();
     @GetMapping
     public ModelAndView form(@AuthenticationPrincipal Usuario usuarioLogado) {
-
+		usuarioLogado.setPedido(null);
         ModelAndView model = new ModelAndView("pedidounidade/visualizar-pedidounidade");
 
         if (usuarioLogado.getUnidade().getPedidoEspecial()) {
@@ -73,7 +73,8 @@ public class PedidoUnidadeController {
     public ModelAndView novoPedido(@AuthenticationPrincipal Usuario usuarioLogado) {
         ModelAndView model = new ModelAndView("pedidounidade/form-pedidounidade");
 
-        usuarioLogado.getPedido().atualizarValor();
+		usuarioLogado.setPedido(new PedidoUnidade());
+		
         model.addObject("pedido", usuarioLogado.getPedido());
         model.addObject("user", usuarioLogado);
         model.addObject("produtos", this.produtoService.buscarTodos());
@@ -82,9 +83,16 @@ public class PedidoUnidadeController {
         return model;
     }
 
+	/**
+	 * Remove apenas da memoria o produto de um pedido.
+	 * @param id
+	 * @param usuarioLogado
+	 * @return
+	 */
     @GetMapping("/remover/{id}")
     public ModelAndView removerProdutoPedido(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
-        ModelAndView model = new ModelAndView("redirect:/pedidosunidade/novo");
+		Long idPedido = usuarioLogado.getPedido().getId();
+		ModelAndView model = new ModelAndView("redirect:/pedidosunidade/editar/"+(idPedido == null ? "0" : idPedido));
 
         for (ProdutoUnidade p : usuarioLogado.getPedido().getProdutos()) {
             if (p.getProduto().getId() == id) {
@@ -96,10 +104,22 @@ public class PedidoUnidadeController {
         return model;
     }
 
+	/**
+	 * Remove o pedido como um todo.
+	 * @param id
+	 * @param usuarioLogado
+	 * @return
+	 */
+	@PostMapping("/excluir/{id}")
+	public ModelAndView removerPedido(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
+		this.pedidoUnidadeService.deletarPorId(id);
+		return form(usuarioLogado);
+	}
+
     @PostMapping("/produto")
     public ModelAndView adicionarProduto(ProdutoModal selecao, @AuthenticationPrincipal Usuario usuarioLogado) {
-        ModelAndView model = new ModelAndView("redirect:/pedidosunidade/novo");
-
+		Long idPedido = usuarioLogado.getPedido().getId();
+		ModelAndView model = new ModelAndView("redirect:/pedidosunidade/editar/"+(idPedido == null ? "0" : idPedido));
         if (selecao.getQuantidade() > 0) {
             Produto produto = this.produtoService.buscarPorId(selecao.getId());
 
@@ -133,14 +153,35 @@ public class PedidoUnidadeController {
         return model;
     }
 
+	@GetMapping("/editar/{id}")
+	public ModelAndView editar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
+		ModelAndView model = new ModelAndView("pedidounidade/form-pedidounidade");
+		PedidoUnidade pedidoUnidade = null;
+		if(id > 0 && usuarioLogado.getPedido() == null) {
+			pedidoUnidade = this.pedidoUnidadeService.buscarPorId(id);
+			usuarioLogado.setPedido(pedidoUnidade);
+		}else {
+			pedidoUnidade = usuarioLogado.getPedido();
+		}
+		
+		usuarioLogado.getPedido().atualizarValor();
+		
+		model.addObject("pedido", pedidoUnidade);
+		model.addObject("user", usuarioLogado);
+		model.addObject("produtos", this.produtoService.buscarTodos());
+		model.addObject("produtoSelecao", new ProdutoModal());
+
+		return model;
+	}
+
     @PostMapping
     public ModelAndView cadastrar(PedidoUnidade pedidoUnidade, @AuthenticationPrincipal Usuario usuarioLogado, RedirectAttributes attributes) {
         ModelAndView model = new ModelAndView("redirect:/pedidosunidade");
         PedidoUnidade pedido = usuarioLogado.getPedido();
         try {
-            pedido.setId(null);
+			
             pedido.setUsuario(usuarioLogado);
-            pedido.setStatus("ABERTO");
+			pedido.setStatus("ABERTO");
             pedido.setDataPedido(Calendar.getInstance());
             pedido.setUnidade(usuarioLogado.getUnidade());
             ArrayList<ProdutoUnidade> produtoUnidades = new ArrayList<>();
@@ -183,7 +224,7 @@ public class PedidoUnidadeController {
                 }
             }
 
-            this.pedidoUnidadeService.atualizaStatus("FINALIZADO", id);
+			this.pedidoUnidadeService.atualizaStatus("FINALIZADO", id);
             msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + id + " finalizado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro " + e);
