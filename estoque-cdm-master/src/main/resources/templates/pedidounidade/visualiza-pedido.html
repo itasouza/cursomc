@@ -54,11 +54,16 @@
                                 <a th:href="@{/pedidosunidade}" class="btn btn-warning">
                                     Retornar
                                 </a>
-                                <a th:if="${(user.unidade.pedidoEspecial && pedido.status == 'ABERTO') || pedido.status == null }" href="#"  class="btn btn-danger" data-toggle="modal" data-target="#myModal">Enviar Pedido</a>
-                                <button th:if="${(!user.unidade.pedidoEspecial && pedido.status == 'ENVIADO') || pedido.status == null }"  class="btn btn-danger" type="button"
+                                <a th:if="${(user.unidade.pedidoEspecial && pedido.status == 'ABERTO') || pedido.status == null }" href="#"  class="btn btn-danger" data-toggle="modal" data-target="#myModal">Enviar Pedido?</a>
+                                
+                                
+                                <button th:if="${(!user.unidade.pedidoEspecial && pedido.status == 'ENVIADO') || pedido.status == null }"  class="btn btn-danger" type="submit"
                                 	th:onclick="'confirmarRecebimento(event, '+${pedido.id}+', \'pedido\',\'formPedido\')'">
                                 	Pedido Recebido?
                                 </button>
+                                
+                               
+                                                                  
                             </div>
                             
                             <div class="container">
