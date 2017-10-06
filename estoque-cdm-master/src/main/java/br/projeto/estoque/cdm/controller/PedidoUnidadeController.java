@@ -124,24 +124,21 @@ public class PedidoUnidadeController {
             Produto produto = this.produtoService.buscarPorId(selecao.getId());
 
             ProdutoUnidade ps = new ProdutoUnidade(produto, selecao.getQuantidade());
-
-            if (usuarioLogado.getPedido().getProdutos().contains(ps)) {
-                System.out.println("Ja tem esse produto na lista");
-                // ja tem esse cara la
-                for (ProdutoUnidade p : usuarioLogado.getPedido().getProdutos()) {
-                    if (ps.equals(p)) {
-                        System.out.println("atualizar o valor da lista");
-                        // achei o cara dentro da lista, atualiza a quantidade
-                        p.setQuantidade(p.getQuantidade() + ps.getQuantidade());
-                        break;
-                    }
-                }
-                System.out.println("nao achou o produto na lista");
-            } else {
+            
+            boolean atualizado = false;
+            for(ProdutoUnidade pu:usuarioLogado.getPedido().getProdutos()) {	
+            	if(pu.getProduto().getId().equals(ps.getProduto().getId())) {
+	                // achei o cara dentro da lista, atualiza a quantidade
+	            	pu.setQuantidade(pu.getQuantidade() + ps.getQuantidade());
+	            	atualizado = true;
+	            	break;
+            	}
+            }
+            if (!atualizado) {
                 usuarioLogado.getPedido().getProdutos().add(ps);
-//                pedido.getProdutos().add(ps);
             }
         }
+        		
         return model;
     }
 
