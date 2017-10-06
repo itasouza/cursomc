@@ -51,7 +51,12 @@
                         <td th:text="${pd.codigoRastreio}"></td>
                         <td th:text="${#numbers.formatDecimal(pd.valorTotal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                         <td>
-                            <a th:href="@{/pedidosunidade/{id}(id = ${pd.id})}"  class="btn btn-warning">Visualiar Pedido</a>                                 
+                        	<form th:id="'formExcluir'+${pd.id}" method="post" th:action="@{/pedidosunidade/excluir/{id}(id=${pd.id})}">
+	                            <a th:if="${pd.status == 'ABERTO'}" th:href="@{/pedidosunidade/editar/{id}(id = ${pd.id})}"  class="btn btn-warning">EDITAR</a> 
+	                            <a th:href="@{/pedidosunidade/{id}(id = ${pd.id})}"  class="btn btn-warning">VISUALIZAR</a>
+	                            <button th:if="${pd.status == 'ABERTO'}" type="submit" class="btn btn-danger"
+	                                        th:onclick="'confirmarExclusao(event, '+${pd.id}+', \'\')'">EXCLUIR</button>     
+	                        </form>                            
                         </td>
                     </tr>
                 </tbody>
