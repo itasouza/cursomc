@@ -47,14 +47,52 @@
                     </div>
 
                     <div class="panel-body">
-                        <form method="post" th:action="@{'/pedidosunidade/finalizar/'+${pedido.id}}">
+                        <form method="post" th:action="@{/pedidosunidade/finalizar}">
+                        	<input type="hidden" th:field="${pedido.id}"/>
                             <div class="span6">
                                 <button onClick="printDiv()" class="btn btn-success glyphicon glyphicon-print" type="button">  Impressão</button>
                                 <a th:href="@{/pedidosunidade}" class="btn btn-warning">
                                     Retornar
                                 </a>
-                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null }" class="btn btn-danger" type="submit">  Pedido Recebido?</button>
+                                <a th:if="${pedido.status == 'ABERTO' || pedido.status == null }" href="#"  class="btn btn-danger" data-toggle="modal" data-target="#myModal">Pedido Recebido?</a>
                             </div>
+                            
+                            <div class="container">
+				                <!-- Modal -->
+				                <div class="modal fade" id="myModal" role="dialog">
+				                    <div class="modal-dialog modal-lg">
+				                        <div class="modal-content">
+				                            <div class="modal-header">
+				                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+				                                <h4 class="modal-title">Informações da Entrega</h4>
+				                            </div>
+				                            <div class="modal-body">
+												<div class="container">
+				                                    <div class="row">
+				                                    	<label for="formaEntrega" class="col-sm-3 control-label">Forma Entrega</label>
+				                                        <div class="col-sm-3">
+				                                            <select th:field="${pedido.formaEntrega}" class="form-control" id="formaEntrega" name="formaEntrega" onchange="selecionaEntrega();" onload="selecionaEntrega();">
+				                                                <option th:each="item : ${formasEntrega}" th:value="${item.id}" th:text="${item.nome}">
+				                                                </option>
+				                                            </select>
+				                                        </div>
+				                                    </div>
+				                                    <div class="row" id="divRastreio">
+				                                        <label for="codigoRastreio" class="col-sm-3 control-label">Serviço Entrega(Código de Rastreio)</label>
+				                                        <div class="col-sm-3">
+				                                        	<input type="text" th:field="${pedido.codigoRastreio}" class="form-control" id="codigoRastreio" name="codigoRastreio"/>
+				                                        </div>
+				                                    </div>
+												</div>
+				                            </div>
+				                            <div class="modal-footer">
+				                                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+				                                <button class="btn btn-primary" type="submit" name="opcao" value="">Gravar</button>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
                         </form>
 
                     </div>
@@ -66,7 +104,16 @@
             <section layout:fragment="js-extra">
                 <script th:src="@{/js/print.js}"></script>        
             </section>
-
-
+	
+	<script>
+		function selecionaEntrega(){
+			var formaEntrega = $("#formaEntrega").val();
+			if(formaEntrega == "1"){
+				$("#divRastreio").show();
+			}else{
+				$("#divRastreio").hide();
+			}
+		}
+	</script>
     </body>
 </html>
