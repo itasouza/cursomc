@@ -75,10 +75,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label th:if="*{id == null }" for="qtdestoque"  class="col-sm-2 control-label">Quantidade Estoque</label>
+                            <!--<label th:if="*{id == null }" for="qtdestoque" class="col-sm-2 control-label">Quantidade Estoque</label>-->
                             <label th:if="*{id != null }" for="qtdestoque" class="col-sm-2 control-label">Estoque perdido</label>
-                            <div class="col-sm-2">
-                                <input type="text" th:field="*{estoqueFisico}" readonly class="form-control" id="qtdestoque" name="qtdestoque"/>
+                            <div th:if="*{id != null }" class="col-sm-2">
+                                <input type="text" th:field="*{estoqueFisico}" class="form-control" id="qtdestoque" name="qtdestoque"/>
                             </div>
                         </div>
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * 
+ *
  */
 @Service
 public class ProdutoUnidadeService implements Services<ProdutoUnidade> {
@@ -33,7 +33,14 @@ public class ProdutoUnidadeService implements Services<ProdutoUnidade> {
 
     @Override
     public ProdutoUnidade salvarOuAtualizar(ProdutoUnidade obj) {
-        return this.repository.save(obj);
+        if (obj.getId() != null && this.repository.exists(obj.getId())) {
+            ProdutoUnidade pu = this.repository.findOne(obj.getId());
+            pu.setQuantidade(pu.getQuantidade() + obj.getQuantidade());
+            return this.repository.save(pu);
+        } else {
+            System.out.println("ID nulo, salvando obj");
+            return this.repository.save(obj);
+        }
     }
 
     @Override

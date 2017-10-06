@@ -119,7 +119,6 @@ public class PedidoUnidadeController {
                 System.out.println("nao achou o produto na lista");
             } else {
                 usuarioLogado.getPedido().getProdutos().add(ps);
-//                pedido.getProdutos().add(ps);
             }
         }
         return model;
@@ -136,6 +135,8 @@ public class PedidoUnidadeController {
     @PostMapping
     public ModelAndView cadastrar(PedidoUnidade pedidoUnidade, @AuthenticationPrincipal Usuario usuarioLogado, RedirectAttributes attributes) {
         ModelAndView model = new ModelAndView("redirect:/pedidosunidade");
+        model.addObject("user", usuarioLogado);
+        attributes.addFlashAttribute("user", usuarioLogado);
         PedidoUnidade pedido = usuarioLogado.getPedido();
         try {
             pedido.setId(null);
@@ -147,6 +148,7 @@ public class PedidoUnidadeController {
 
             // registrar os produtos e quantidade
             for (ProdutoUnidade p : pedido.getProdutos()) {
+                System.out.println("Salvando produto "+p.getId()+" "+p.getProduto().getId()+" "+p.getProduto().getNome());
                 produtoUnidades.add(this.produtoUnidadeService.salvarOuAtualizar(p));
             }
             pedido.setProdutos(produtoUnidades);
@@ -155,7 +157,7 @@ public class PedidoUnidadeController {
             msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido #" + pedido.getId() + " registrado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro " + e);
-            msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Não foi possível registrar o pedido");
+            msg = new FormMensagem(TipoMensagem.ERRO).addMensagem("Não foi possível registrar o pedido");
         }
         usuarioLogado.setPedido(new PedidoUnidade());
         attributes.addFlashAttribute("msg", msg);

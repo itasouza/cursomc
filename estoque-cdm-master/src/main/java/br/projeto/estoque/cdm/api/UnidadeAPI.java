@@ -38,12 +38,12 @@ public class UnidadeAPI {
     @Autowired
     PedidoService pedidoService;
 
-    @GetMapping(value = "/consulta/{cep}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Unidade>> pesquisaUnidadeCEP(@PathVariable String cep) {
+    @GetMapping(value = "/consulta/{cep}/{idPedido}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Unidade> pesquisaUnidadeCEP(@PathVariable String cep, @PathVariable Long idPedido) {
         String cepDesformatado = cep.replaceAll("-", "").replaceAll(" ", "");
         if (cepDesformatado.length() > 8 || cepDesformatado.contains(".")) {
             System.out.println("CEP invalido " + cep);
-            return ResponseEntity.ok(new ArrayList<Unidade>());
+            return ResponseEntity.ok(new Unidade());
         }
         List<FaixaAtendimento> faixa = new ArrayList<>();
         List<Unidade> unidades = new ArrayList<>();
@@ -56,17 +56,21 @@ public class UnidadeAPI {
             if (unidades.isEmpty()) {
                 // buscar quem atende pedido especial
                 List<Unidade> unidade = this.unidadeService.buscarAtendimentoEspecial();
-                if (unidade != null) {
-                    return ResponseEntity.ok(unidade);
+                if (unidade != null && (!unidade.isEmpty())) {
+                    this.pedidoService.atualizarUnidade(idPedido, unidade.get(0));
+                    return ResponseEntity.ok(unidade.get(0));
                 }
+            } else {
+                // adicionar a unidade no pedido
+                this.pedidoService.atualizarUnidade(idPedido, unidades.get(0));
             }
 
         } catch (Exception e) {
             System.out.println("Ocorreu um erro na API Unidade. Erro " + e);
-            return ResponseEntity.ok(new ArrayList<Unidade>());
+            return ResponseEntity.ok(new Unidade());
         }
-        this.pedidoService.registrarUnidadeEmNovosPedidos();
-        return ResponseEntity.ok(unidades);
+
+        return ResponseEntity.ok(unidades.get(0));
 
     }
 }

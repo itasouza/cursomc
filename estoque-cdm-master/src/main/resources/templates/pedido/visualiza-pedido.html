@@ -12,7 +12,7 @@
             <div id="print" th:if="${pedido != null}" >
                 <div class="panel panel-default">
                     <div class="panel-heading"><small th:text="${' Pedido N: '+pedido.id}"> Pedido N: 4524</small></div>
-                    <div class="panel-heading"><small th:text="${' Nome do Cliente : '+pedido.cliente.nome}"> Nome do Cliente : Maria jose da Silva </small></div>
+                    <div class="panel-heading"><small th:text="${' Nome do Cliente : '+pedido.cliente}"> Nome do Cliente : Maria jose da Silva </small></div>
                     <div class="panel-heading"><small th:text="${' Endereço : '+pedido.cliente.endereco}"> Endereço : Rua Mario de Souza 45 </small></div>
                     <div class="panel-heading"><small th:text="${' Estado : '+pedido.cliente.uf}"> Estado : São Paulo </small></div>
                     <div class="panel-heading"><small th:text="${' Cidade : '+pedido.cliente.cidade}"> Cidade : Osasco </small></div>
@@ -35,8 +35,7 @@
                         </tr>
                     </tbody>
                 </table>
-              </div>
- 
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                     </div>
@@ -48,7 +47,7 @@
                                 <a th:href="@{/pedidos}" class="btn btn-warning">
                                     Retornar
                                 </a>
-                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null}" class="btn btn-danger" type="submit">  Pedido entreque ao cliente?</button>
+                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null}" class="btn btn-danger" type="submit">  Pedido entreque</button>
                             </div>
                         </form>
 
@@ -56,7 +55,7 @@
 
                 </div>
 
-           
+            </div>
             <small th:if="${pedido==null}">Nenhum pedido localizado</small>
             <section layout:fragment="js-extra">
                 <script th:src="@{/js/print.js}"></script>        

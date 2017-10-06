@@ -34,7 +34,6 @@
                     <thead>
                         <tr>
                             <th>Cliente</th>
-                            <th>Status</th>
                             <th>UF</th>
                             <th>Cidade</th>
                             <th>Bairro</th>
@@ -45,9 +44,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="filtro-campo" th:each="pd : ${pedidos}"> 
+                        <tr class="filtro-campo" th:each="pd : ${pedidos}">
                             <td th:text="${pd.cliente.nome}"></td>
-                            <td th:text="${pd.status}"></td>
                             <td th:text="${pd.cliente.uf}"></td>
                             <td th:text="${pd.cliente.cidade}"></td>
                             <td th:text="${pd.cliente.bairro}"></td>

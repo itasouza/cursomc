@@ -34,7 +34,6 @@ public class ProdutoUnidade {
 
     public ProdutoUnidade(Produto p, Integer qtd) {
         this.produto = p;
-        this.id = p.getId();
         this.quantidade = qtd;
     }
 

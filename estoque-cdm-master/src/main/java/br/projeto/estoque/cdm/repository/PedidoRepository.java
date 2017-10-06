@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  *
- * 
+ *
  */
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
@@ -33,4 +33,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Transactional
     @Query("UPDATE pedidos p SET p.status = :status WHERE p.id = :id")
     public void updateStatusWhereId(@Param("status") String status, @Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE pedidos p SET p.unidade = :unidade WHERE p.id = :id")
+    public void updateUnidadeWhereId(@Param("unidade") Unidade get, @Param("id") Long idPedido);
 }

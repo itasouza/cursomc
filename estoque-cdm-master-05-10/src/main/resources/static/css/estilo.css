@@ -1,0 +1,53 @@
+.panel-default{
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 80px;
+}
+
+
+.form-horizontal{
+    margin-top: 18px;
+}
+
+.table{
+    margin-top: 42px;   
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 98%;
+}
+
+.campobusca{
+    margin-left: 5px;
+}
+
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #bbb;
+}
+td, th {
+    border-top: 1px solid #ddd;
+    padding: 4px 8px;
+}
+
+tbody tr:nth-child(even) td {
+    background-color: #eee;
+}
+
+@media screen and (max-width: 640px) {
+    table {
+        overflow-x: auto;
+        display: block;
+    }
+}
+#logo{
+    display: block;
+    max-width: 35%;
+    margin-right: auto;
+    margin-left: auto; 
+}
+
+.navbar-brand{
+    padding-top: 0px;
+}

@@ -85,11 +85,14 @@ public class PedidoService implements Services<Pedido> {
     }
 
     public List<Pedido> buscarPorUnidade(Unidade unidade) {
-        System.out.println("INICIANDO BUSCA PELA UNIDADE");
         return this.repository.findByUnidade(unidade);
     }
 
     public void atualizarStatus(Long id, String statusPedido) {
         this.repository.updateStatusWhereId(statusPedido, id);
+    }
+
+    public void atualizarUnidade(Long idPedido, Unidade get) {
+        this.repository.updateUnidadeWhereId(get, idPedido);
     }
 }
