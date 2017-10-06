@@ -47,14 +47,18 @@
                     </div>
 
                     <div class="panel-body">
-                        <form method="post" th:action="@{/pedidosunidade/finalizar}">
+                        <form method="post" th:action="@{/pedidosunidade/finalizar}" id="formPedido">
                         	<input type="hidden" th:field="${pedido.id}"/>
                             <div class="span6">
                                 <button onClick="printDiv()" class="btn btn-success glyphicon glyphicon-print" type="button">  Impressão</button>
                                 <a th:href="@{/pedidosunidade}" class="btn btn-warning">
                                     Retornar
                                 </a>
-                                <a th:if="${pedido.status == 'ABERTO' || pedido.status == null }" href="#"  class="btn btn-danger" data-toggle="modal" data-target="#myModal">Pedido Recebido?</a>
+                                <a th:if="${(user.unidade.pedidoEspecial && pedido.status == 'ABERTO') || pedido.status == null }" href="#"  class="btn btn-danger" data-toggle="modal" data-target="#myModal">Enviar Pedido</a>
+                                <button th:if="${(!user.unidade.pedidoEspecial && pedido.status == 'ENVIADO') || pedido.status == null }"  class="btn btn-danger" type="button"
+                                	th:onclick="'confirmarRecebimento(event, '+${pedido.id}+', \'pedido\',\'formPedido\')'">
+                                	Pedido Recebido?
+                                </button>
                             </div>
                             
                             <div class="container">
@@ -102,7 +106,10 @@
          
             <small th:if="${pedido==null}">Nenhum pedido localizado</small>
             <section layout:fragment="js-extra">
-                <script th:src="@{/js/print.js}"></script>        
+                <script th:src="@{/js/print.js}"></script>   
+                <link rel="stylesheet" type="text/css" th:href="@{/css/sweetalert/sweetalert.css}" media="screen,projection" />
+                <script th:src="@{/js/sweetalert/sweetalert.min.js}"></script> 
+				<script th:src="@{/js/sweetalert/confirmacaoRecebimento.js}"></script>   
             </section>
 	
 	<script>
