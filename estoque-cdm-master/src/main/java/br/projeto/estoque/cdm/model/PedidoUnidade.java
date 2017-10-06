@@ -10,10 +10,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -74,14 +73,10 @@ public class PedidoUnidade implements Serializable {
     @Column(name = "valor_frete", columnDefinition = "numeric(10,2)")
     Double valorFrete;
 
-//  servico_entrega character varying(1) NOT NULL,
 //    @NotNull
-    @Column(name = "servico_entrega", columnDefinition = "character varying(1)")
-    String entrega;
-
-//    @NotNull
-    @Column(name = "forma_entrega", columnDefinition = "character varying(1)")
-    String formaEntrega;
+    @ManyToOne
+    @JoinColumn(columnDefinition = "integer", name = "idformaentrega")
+    FormaEntrega formaEntrega;
 
 //    codigo_rastreio character varying(50),
     @Column(name = "codigo_rastreio", columnDefinition = "character varying(50)")
@@ -168,19 +163,11 @@ public class PedidoUnidade implements Serializable {
         this.valorFrete = valorFrete;
     }
 
-    public String getEntrega() {
-        return entrega;
-    }
-
-    public void setEntrega(String entrega) {
-        this.entrega = entrega;
-    }
-
-    public String getFormaEntrega() {
+    public FormaEntrega getFormaEntrega() {
         return formaEntrega;
     }
 
-    public void setFormaEntrega(String formaEntrega) {
+    public void setFormaEntrega(FormaEntrega formaEntrega) {
         this.formaEntrega = formaEntrega;
     }
 

@@ -5,18 +5,6 @@
  */
 package br.projeto.estoque.cdm.controller;
 
-import br.projeto.estoque.cdm.mensagem.FormMensagem;
-import br.projeto.estoque.cdm.mensagem.TipoMensagem;
-import br.projeto.estoque.cdm.model.EstoqueUnidade;
-import br.projeto.estoque.cdm.model.PedidoUnidade;
-import br.projeto.estoque.cdm.model.Produto;
-import br.projeto.estoque.cdm.model.ProdutoModal;
-import br.projeto.estoque.cdm.model.ProdutoUnidade;
-import br.projeto.estoque.cdm.model.Usuario;
-import br.projeto.estoque.cdm.service.EstoqueUnidadeService;
-import br.projeto.estoque.cdm.service.PedidoUnidadeService;
-import br.projeto.estoque.cdm.service.ProdutoService;
-import br.projeto.estoque.cdm.service.ProdutoUnidadeService;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -29,6 +17,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import br.projeto.estoque.cdm.mensagem.FormMensagem;
+import br.projeto.estoque.cdm.mensagem.TipoMensagem;
+import br.projeto.estoque.cdm.model.EstoqueUnidade;
+import br.projeto.estoque.cdm.model.PedidoUnidade;
+import br.projeto.estoque.cdm.model.Produto;
+import br.projeto.estoque.cdm.model.ProdutoModal;
+import br.projeto.estoque.cdm.model.ProdutoUnidade;
+import br.projeto.estoque.cdm.model.Usuario;
+import br.projeto.estoque.cdm.service.EstoqueUnidadeService;
+import br.projeto.estoque.cdm.service.FormaEntregaService;
+import br.projeto.estoque.cdm.service.PedidoUnidadeService;
+import br.projeto.estoque.cdm.service.ProdutoService;
+import br.projeto.estoque.cdm.service.ProdutoUnidadeService;
 
 /**
  *
@@ -51,6 +53,10 @@ public class PedidoUnidadeController {
 
     @Autowired
     EstoqueUnidadeService estoqueUnidadeService;
+    
+    @Autowired
+    FormaEntregaService formaEntregaService;
+    
 
 //    PedidoUnidade pedido = new PedidoUnidade();
     @GetMapping
@@ -147,6 +153,8 @@ public class PedidoUnidadeController {
         ModelAndView model = new ModelAndView("pedidounidade/visualiza-pedido");
         model.addObject("pedido", this.pedidoUnidadeService.buscarPorId(id));
         model.addObject("user", usuarioLogado);
+        model.addObject("formasEntrega", this.formaEntregaService.buscarTodos());
+       
         return model;
     }
 
@@ -204,12 +212,16 @@ public class PedidoUnidadeController {
 
     }
 
-    @PostMapping("/finalizar/{id}")
-    public ModelAndView finalizarPedido(@PathVariable Long id, RedirectAttributes attributes) {
+    @PostMapping("/finalizar")
+    public ModelAndView finalizarPedido(PedidoUnidade pedidoUnidade, RedirectAttributes attributes) {
         ModelAndView model = new ModelAndView("redirect:/pedidosunidade");
         try {
-            PedidoUnidade pedido = this.pedidoUnidadeService.buscarPorId(id);
-
+            PedidoUnidade pedido = this.pedidoUnidadeService.buscarPorId(pedidoUnidade.getId());
+            pedido.setFormaEntrega(pedidoUnidade.getFormaEntrega());
+            pedido.setCodigoRastreio(pedidoUnidade.getCodigoRastreio());
+            pedido.setStatus("FINALIZADO");
+            
+            
             for (ProdutoUnidade p : pedido.getProdutos()) {
                 // por cada produto inserido, cadastrar no stoque do CDM
                 EstoqueUnidade estoque = this.estoqueUnidadeService.buscarPorProduto(p.getProduto());
@@ -224,8 +236,8 @@ public class PedidoUnidadeController {
                 }
             }
 
-			this.pedidoUnidadeService.atualizaStatus("FINALIZADO", id);
-            msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + id + " finalizado com sucesso");
+            this.pedidoUnidadeService.salvarOuAtualizar(pedido);
+            msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + pedidoUnidade.getId() + " finalizado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro " + e);
             msg = new FormMensagem(TipoMensagem.ERRO).addMensagem("Não foi possivel finalizar o pedido");

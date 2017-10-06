@@ -37,6 +37,7 @@
                         <th>Usuario</th>
                         <th>Data Pedido</th>
                         <th>Situacao</th>
+                        <th>Forma Entrega</th>
                         <th>Rastreamento</th>
                         <th>Valor Total</th>
                         <th>Operações</th>
@@ -48,6 +49,7 @@
                         <td th:text="${pd.usuario.nome}"></td>
                         <td th:text="${#dates.format(pd.dataPedido, 'dd-MM-yyyy')}" ></td>
                         <td th:text="${pd.status}"></td>
+                        <td th:text="${pd.formaEntrega != null ? pd.formaEntrega.nome : ''}"></td>
                         <td th:text="${pd.codigoRastreio}"></td>
                         <td th:text="${#numbers.formatDecimal(pd.valorTotal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                         <td>
