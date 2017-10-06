@@ -154,6 +154,22 @@
                 </tbody>
             </table>
 
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    </div>
+					
+                    <div class="panel-body">
+                        <form method="post" th:action="@{/pedidosunidade/finalizar}">
+                        	<input type="hidden" th:field="${pedido.id}"/>
+                            <div class="span6">
+                                <a th:href="@{/pedidosunidade}" class="btn btn-warning">
+                                    Retornar
+                                </a>
+                              </div>
+                        </form>
+                    </div>
+                </div>
+                
 
         </section>
         <section layout:fragment="js-extra">
