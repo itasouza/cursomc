@@ -39,8 +39,7 @@ public class EstoqueUnidadeService implements Services<EstoqueUnidade> {
 
     @Override
     public EstoqueUnidade salvarOuAtualizar(EstoqueUnidade obj) {
-        EstoqueUnidade u = this.repository.findByProduto(obj.getProduto());
-        return this.repository.save(u);
+        return this.repository.save(obj);
     }
 
     @Override
