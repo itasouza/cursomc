@@ -233,7 +233,7 @@ public class PedidoUnidadeController {
 						this.estoqueUnidadeService.salvarOuAtualizar(eu);
 					} else {
 						// produto ja existe, atualizar
-						estoque.setEstoqueFisico(estoque.getEstoqueFisico() - p.getQuantidade());
+						estoque.setEstoqueFisico(estoque.getEstoqueFisico() + p.getQuantidade());
 						this.estoqueUnidadeService.salvarOuAtualizar(estoque);
 					}
 				}
