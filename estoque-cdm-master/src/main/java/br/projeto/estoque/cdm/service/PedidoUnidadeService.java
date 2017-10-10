@@ -5,12 +5,18 @@
  */
 package br.projeto.estoque.cdm.service;
 
-import br.projeto.estoque.cdm.model.PedidoUnidade;
-import br.projeto.estoque.cdm.model.Unidade;
-import br.projeto.estoque.cdm.repository.PedidoUnidadeRepository;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.projeto.estoque.cdm.model.EstoqueUnidade;
+import br.projeto.estoque.cdm.model.PedidoUnidade;
+import br.projeto.estoque.cdm.model.ProdutoUnidade;
+import br.projeto.estoque.cdm.model.Unidade;
+import br.projeto.estoque.cdm.model.Usuario;
+import br.projeto.estoque.cdm.repository.PedidoUnidadeRepository;
 
 /**
  *
@@ -21,6 +27,9 @@ public class PedidoUnidadeService implements Services<PedidoUnidade> {
 
     @Autowired
     PedidoUnidadeRepository repository;
+    
+    @Autowired
+    EstoqueUnidadeService estoqueUnidadeService;
 
     @Override
     public PedidoUnidade buscarPorId(Long id) {
@@ -53,5 +62,37 @@ public class PedidoUnidadeService implements Services<PedidoUnidade> {
 
     public void atualizaStatus(String statusPedido, Long id) {
         this.repository.updateStatusWhereId(statusPedido, id);
+    }
+    
+    @Transactional
+    public String finalizar(PedidoUnidade pedidoUnidade, Usuario usuarioLogado) {
+    	String msg = null;
+    	PedidoUnidade pedido = this.buscarPorId(pedidoUnidade.getId());
+		if(usuarioLogado.getUnidade().getPedidoEspecial()) {
+			pedido.setFormaEntrega(pedidoUnidade.getFormaEntrega());
+			pedido.setCodigoRastreio(pedidoUnidade.getCodigoRastreio());
+			pedido.setStatus("ENVIADO");
+			
+		}else {
+			for (ProdutoUnidade p : pedido.getProdutos()) {
+				// por cada produto inserido, cadastrar no stoque do CDM
+				EstoqueUnidade estoque = this.estoqueUnidadeService.buscarPorProduto(p.getProduto());
+				if (estoque == null) {
+					// nao tem o produto no estoque, cadastrar o produto
+					EstoqueUnidade eu = new EstoqueUnidade(p.getProduto(), pedido.getUnidade(), p.getQuantidade(), 0);
+					this.estoqueUnidadeService.salvarOuAtualizar(eu);
+				} else {
+					// produto ja existe, atualizar
+					estoque.setEstoqueFisico(estoque.getEstoqueFisico() + p.getQuantidade());
+					this.estoqueUnidadeService.salvarOuAtualizar(estoque);
+				}
+			}
+			pedido.setStatus("FINALIZADO");
+		}
+		msg = "Pedido número " + pedidoUnidade.getId() + " enviado com sucesso";
+		
+		this.salvarOuAtualizar(pedido);
+		
+		return msg;
     }
 }

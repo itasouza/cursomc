@@ -11,6 +11,7 @@ import java.util.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -213,35 +214,13 @@ public class PedidoUnidadeController {
 	}
 
 	@PostMapping("/finalizar")
+	@Transactional
 	public ModelAndView finalizarPedido(PedidoUnidade pedidoUnidade, @AuthenticationPrincipal Usuario usuarioLogado, RedirectAttributes attributes) {
 		ModelAndView model = new ModelAndView("redirect:/pedidosunidade");
 
 		try {
-			PedidoUnidade pedido = this.pedidoUnidadeService.buscarPorId(pedidoUnidade.getId());
-			if(usuarioLogado.getUnidade().getPedidoEspecial()) {
-				pedido.setFormaEntrega(pedidoUnidade.getFormaEntrega());
-				pedido.setCodigoRastreio(pedidoUnidade.getCodigoRastreio());
-				pedido.setStatus("ENVIADO");
-				msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + pedidoUnidade.getId() + " enviado com sucesso");
-			}else {
-				for (ProdutoUnidade p : pedido.getProdutos()) {
-					// por cada produto inserido, cadastrar no stoque do CDM
-					EstoqueUnidade estoque = this.estoqueUnidadeService.buscarPorProduto(p.getProduto());
-					if (estoque == null) {
-						// nao tem o produto no estoque, cadastrar o produto
-						EstoqueUnidade eu = new EstoqueUnidade(p.getProduto(), pedido.getUnidade(), p.getQuantidade(), 0);
-						this.estoqueUnidadeService.salvarOuAtualizar(eu);
-					} else {
-						// produto ja existe, atualizar
-						estoque.setEstoqueFisico(estoque.getEstoqueFisico() + p.getQuantidade());
-						this.estoqueUnidadeService.salvarOuAtualizar(estoque);
-					}
-				}
-				pedido.setStatus("FINALIZADO");
-				msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + pedidoUnidade.getId() + " finalizado com sucesso");
-			}
-			this.pedidoUnidadeService.salvarOuAtualizar(pedido);
-			
+			msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem(
+					this.pedidoUnidadeService.finalizar(pedidoUnidade, usuarioLogado));
 		} catch (Exception e) {
 			System.out.println("Erro " + e);
 			msg = new FormMensagem(TipoMensagem.ERRO).addMensagem("Não foi possivel atualizar o pedido");
