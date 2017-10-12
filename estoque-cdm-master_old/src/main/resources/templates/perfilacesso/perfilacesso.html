@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{template}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+    <head>
+        <link th:href="@{/css/estilo.css}" rel="stylesheet"/>
+
+        <script language="JavaScript">
+            function enviardadosperfil() {
+
+                if (document.getElementById("descricao").value == "") {
+                    alert("Preencha campo descricao corretamente!");
+                    document.getElementById("descricao").focus();
+                    return false;
+                }
+
+                return true;
+            }
+
+        </script>
+
+
+
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <!--formulário-->
+            <form class="form-horizontal" method="post" th:action="@{/perfilAcesso}"  name="dados" onSubmit="return enviardadosperfil();">
+                <input type="hidden" th:field="${perfil.id}"/>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Cadastro Perfil de Acesso </h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <label for="descricao" class="col-sm-2 control-label">Descrição</label>
+                            <div class="col-sm-4">
+                                <input type="text" th:field="${perfil.descricao}" class="form-control" required id="descricao" name="descricao"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status" class="col-sm-2 control-label">Administrador?</label>
+                            <div class="col-sm-2">
+                                <select th:field="${perfil.adm}" id="ativo" class="form-control">
+                                    <option th:value="true"  >Sim</option>
+                                    <option th:value="false" >Não</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary">Gravar</button>
+                                <a th:if="${perfil.id != null}" th:href="@{/perfilAcesso}" class="btn btn-danger">Cancelar</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <!--formulário-->
+
+
+
+            <form class="form-horizontal" method="post"  name="dados" onSubmit="return enviardadosmodelo();">
+                <div class="campobusca">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control filtro-input" id="busca" placeholder="Consulta Registro"/>
+                    </div>
+                </div>
+                </br>
+            </form>
+
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>ADM</th>
+                        <th>Operações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="filtro-campo" th:each="p : ${perfils}">
+                        <td th:text="${p.descricao}">DESCRICAO</td>
+                        <td th:text="${p.adm}">ADM</td>
+                        <td>
+
+                            <form th:id="'formExcluir'+${p.id}" method="post" th:action="@{/perfilAcesso/{id}(id=${p.id})}">
+                                <a th:href="@{/perfilAcesso/editar/{id}(id = ${p.id})}"  class="btn btn-warning">EDITAR</a> 
+
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <button type="submit" class="btn btn-danger"
+                                        th:onclick="'confirmarExclusao(event, '+${p.id}+', \''+${p.descricao}+'\')'">EXCLUIR</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+        <section layout:fragment="js-extra">
+            <link rel="stylesheet" type="text/css" th:href="@{css/sweetalert/sweetalert.css}" media="screen,projection" />
+            <script th:src="@{js/sweetalert/sweetalert.min.js}"></script>
+            <script th:src="@{js/sweetalert/confirmacaoExclusao.js}"></script>
+        </section>
+    </body>
+</html>
