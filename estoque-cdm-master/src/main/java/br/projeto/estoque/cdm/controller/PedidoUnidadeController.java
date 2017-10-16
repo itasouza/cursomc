@@ -15,6 +15,7 @@ import br.projeto.estoque.cdm.model.ProdutoModal;
 import br.projeto.estoque.cdm.model.ProdutoUnidade;
 import br.projeto.estoque.cdm.model.Usuario;
 import br.projeto.estoque.cdm.service.EstoqueUnidadeService;
+import br.projeto.estoque.cdm.service.FormaEntregaService;
 import br.projeto.estoque.cdm.service.PedidoUnidadeService;
 import br.projeto.estoque.cdm.service.ProdutoService;
 import br.projeto.estoque.cdm.service.ProdutoUnidadeService;
@@ -51,6 +52,9 @@ public class PedidoUnidadeController {
 
     @Autowired
     EstoqueUnidadeService estoqueUnidadeService;
+
+    @Autowired
+    FormaEntregaService formaEntregaService;
 
 //    PedidoUnidade pedido = new PedidoUnidade();
     @GetMapping
@@ -137,6 +141,7 @@ public class PedidoUnidadeController {
         ModelAndView model = new ModelAndView("pedidounidade/visualiza-pedido");
         model.addObject("pedido", this.pedidoUnidadeService.buscarPorId(id));
         model.addObject("user", usuarioLogado);
+        model.addObject("formasEntrega", this.formaEntregaService.buscarTodos());
         return model;
     }
 
@@ -174,28 +179,36 @@ public class PedidoUnidadeController {
     }
 
     @PostMapping("/finalizar/{id}")
-    public ModelAndView finalizarPedido(@PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+    public ModelAndView finalizarPedido(PedidoUnidade pedidoUnidade, @PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
         ModelAndView model = new ModelAndView("redirect:/pedidosunidade");
         try {
             PedidoUnidade pedido = this.pedidoUnidadeService.buscarPorId(id);
-
-            for (ProdutoUnidade p : pedido.getProdutos()) {
-                // por cada produto inserido, cadastrar no stoque do CDM
-                EstoqueUnidade estoque = this.estoqueUnidadeService.buscarPorProdutoEUnidade(p.getProduto(), usuarioLogado.getUnidade());
-                if (estoque == null) {
-                    // nao tem o produto no estoque, cadastrar o produto
-                    EstoqueUnidade eu = new EstoqueUnidade(p.getProduto(), pedido.getUnidade(), p.getQuantidade(), 0);
-                    eu.setUnidade(usuarioLogado.getUnidade());
-                    this.estoqueUnidadeService.salvarOuAtualizar(eu);
-                } else {
-                    estoque.setUnidade(usuarioLogado.getUnidade());
-                    // produto ja existe, atualizar
-                    estoque.setEstoqueFisico(estoque.getEstoqueFisico() + p.getQuantidade());
-                    this.estoqueUnidadeService.salvarOuAtualizar(estoque);
+            if (usuarioLogado.getUnidade().getPedidoEspecial()) {
+                pedido.setFormaEntrega(pedidoUnidade.getFormaEntrega());
+                pedido.setCodigoRastreio(pedidoUnidade.getCodigoRastreio());
+                pedido.setStatus("ENVIADO");
+                msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + pedidoUnidade.getId() + " enviado com sucesso");
+            } else {
+                for (ProdutoUnidade p : pedido.getProdutos()) {
+                    // por cada produto inserido, cadastrar no stoque do CDM
+                    EstoqueUnidade estoque = this.estoqueUnidadeService.buscarPorProdutoEUnidade(p.getProduto(), usuarioLogado.getUnidade());
+                    if (estoque == null) {
+                        // nao tem o produto no estoque, cadastrar o produto
+                        EstoqueUnidade eu = new EstoqueUnidade(p.getProduto(), pedido.getUnidade(), p.getQuantidade(), 0);
+                        eu.setUnidade(usuarioLogado.getUnidade());
+                        this.estoqueUnidadeService.salvarOuAtualizar(eu);
+                    } else {
+                        estoque.setUnidade(usuarioLogado.getUnidade());
+                        // produto ja existe, atualizar
+                        estoque.setEstoqueFisico(estoque.getEstoqueFisico() + p.getQuantidade());
+                        this.estoqueUnidadeService.salvarOuAtualizar(estoque);
+                    }
                 }
-            }
 
-            msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + id + " finalizado com sucesso");
+                pedido.setStatus("FINALIZADO");
+                msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número " + id + " finalizado com sucesso");
+            }
+            this.pedidoUnidadeService.salvarOuAtualizar(pedido);
         } catch (Exception e) {
             System.out.println("Erro " + e);
             msg = new FormMensagem(TipoMensagem.ERRO).addMensagem("Não foi possivel finalizar o pedido");

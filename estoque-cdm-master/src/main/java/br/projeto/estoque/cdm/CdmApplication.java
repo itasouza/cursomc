@@ -1,28 +1,20 @@
 package br.projeto.estoque.cdm;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
 import br.projeto.estoque.cdm.model.PerfilAcesso;
 import br.projeto.estoque.cdm.model.Unidade;
 import br.projeto.estoque.cdm.model.Usuario;
 import br.projeto.estoque.cdm.service.PerfilAcessoService;
 import br.projeto.estoque.cdm.service.UnidadeService;
 import br.projeto.estoque.cdm.service.UsuarioService;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
-//@SpringBootApplication
-@Configuration
-@ComponentScan
-@EnableAutoConfiguration
-public class CdmApplication extends SpringBootServletInitializer{
+@SpringBootApplication
+public class CdmApplication {
 
     @Autowired
     UsuarioService service;
