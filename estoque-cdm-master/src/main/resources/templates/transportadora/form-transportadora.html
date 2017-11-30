@@ -101,27 +101,27 @@
     <body>
         <section layout:fragment="content">
             <!--formulário-->
-            <form class="form-horizontal" th:action="@{/unidade}" method="post"  name="dados" onSubmit="return enviardadoscdm();">
+            <form class="form-horizontal" th:action="@{/transportadora}" method="post"  name="dados" onSubmit="return enviardadoscdm();">
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Cadastro de unidade </h3>
+                        <h3 class="panel-title">Cadastro de transportadora </h3>
                     </div>
 
-                    <input type="hidden" th:field="${unidade.id}"/>
+                    <input type="hidden" th:field="${transportadora.id}"/>
                     <div class="panel-body">
 
                         <div class="form-group">
                             <label for="nome" class="col-sm-2 control-label">Nome</label>
                             <div class="col-sm-4">
-                                <input type="text" th:field="${unidade.nome}" class="form-control" id="nome" name="nome"/>
+                                <input type="text" th:field="${transportadora.nome}" class="form-control" id="nome" name="nome"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="cnpj" class="col-sm-2 control-label">Cnpj</label>
                             <div class="col-sm-4">
-                                <input type="text" th:field="${unidade.cnpj}" class="form-control" id="cnpj"
+                                <input type="text" th:field="${transportadora.cnpj}" class="form-control" id="cnpj"
                                        onkeyup="FormataCnpj(this,event)" onblur="if(!validarCNPJ(this.value)){alert('CNPJ Informado é inválido'); this.value='';}" name="cnpj"/>
                             </div>
                         </div>
@@ -129,35 +129,35 @@
                         <div class="form-group">
                             <label for="endereco" class="col-sm-2 control-label">Endereço</label>
                             <div class="col-sm-4">
-                                <input type="text" th:field="${unidade.endereco}" class="form-control" id="endereco" name="endereco"/>
+                                <input type="text" th:field="${transportadora.endereco}" class="form-control" id="endereco" name="endereco"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="numero" class="col-sm-2 control-label">Número:</label>
                             <div class="col-sm-1">
-                                <input type="text" th:field="${unidade.numero}" class="form-control" id="numero" name="numero"/>
+                                <input type="text" th:field="${transportadora.numero}" class="form-control" id="numero" name="numero"/>
                             </div>
                         </div>
   
                           <div class="form-group">
                             <label for="cidade" class="col-sm-2 control-label">Cidade:</label>
                             <div class="col-sm-2">
-                                <input type="text" th:field="${unidade.cidade}" class="form-control" id="cidade" name="cidade"/>
+                                <input type="text" th:field="${transportadora.cidade}" class="form-control" id="cidade" name="cidade"/>
                             </div>
                         </div>
                         
                        <div class="form-group">
                             <label for="estado" class="col-sm-2 control-label">Estado:</label>
                             <div class="col-sm-1">
-                                <input type="text" th:field="${unidade.estado}" class="form-control" id="estado" name="estado"/>
+                                <input type="text" th:field="${transportadora.estado}" class="form-control" id="estado" name="estado"/>
                             </div>
                         </div>
   
                          <div class="form-group">
                             <label for="cep" class="col-sm-2 control-label">Cep:</label>
                             <div class="col-sm-2">
-                                <input type="text" th:field="${unidade.cep}" class="form-control" id="cep" name="cep"/>
+                                <input type="text" th:field="${transportadora.cep}" class="form-control" id="cep" name="cep"/>
                             </div>
                         </div>
                                     
@@ -165,14 +165,14 @@
                          <div class="form-group">
                             <label for="contato" class="col-sm-2 control-label">Nome do Contato:</label>
                             <div class="col-sm-2">
-                                <input type="text" th:field="${unidade.contato}" class="form-control" id="cep" name="contato"/>
+                                <input type="text" th:field="${transportadora.contato}" class="form-control" id="cep" name="contato"/>
                             </div>
                         </div>
                                     
                          <div class="form-group">
                             <label for="telefone" class="col-sm-2 control-label">Telefone:</label>
                             <div class="col-sm-2">
-                                <input type="text" th:field="${unidade.telefone}" class="form-control" id="telefone" name="telefone"/>
+                                <input type="text" th:field="${transportadora.telefone}" class="form-control" id="telefone" name="telefone"/>
                             </div>
                         </div>
                         
@@ -180,36 +180,17 @@
                          <div class="form-group">
                             <label for="email" class="col-sm-2 control-label">Email:</label>
                             <div class="col-sm-2">
-                                <input type="email" th:field="${unidade.email}" class="form-control" id="email" name="email"/>
+                                <input type="email" th:field="${transportadora.email}" class="form-control" id="email" name="email"/>
                             </div>
                         </div>                               
                                   
                                   
                                                                                                                                                           
-                        <div class="form-group">
-                            <label for="atende" class="col-sm-2 control-label">Atende pedido fora da área?</label>
-                            <div class="col-sm-2">
-                                <select th:field="${unidade.pedidoEspecial}" id="atende" class="form-control">
-                                    <option th:value="true">Sim</option>
-                                    <option th:value="false">Não</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status" class="col-sm-2 control-label">Ativo?</label>
-                            <div class="col-sm-2">
-                                <select th:field="${unidade.ativo}" id="ativo" class="form-control">
-                                    <option th:value="true"  >Sim</option>
-                                    <option th:value="false" >Não</option>
-                                </select>
-                            </div>
-                        </div>
-
+                       
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-primary">Gravar</button>
-                                <a th:if="${unidade.id != null}" th:href="@{/unidade}" class="btn btn-danger">Cancelar</a>
+                                <a th:if="${transportadora.id != null}" th:href="@{/transportadora}" class="btn btn-danger">Cancelar</a>
                             </div>
 
                         </div>
@@ -234,20 +215,16 @@
                     <tr>
                         <th>Nome</th>
                         <th>CNPJ</th>
-                        <th>Ativo</th>
-                        <th>Pedido especial</th>
                         <th>Operações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="filtro-campo" th:each="p : ${unidades}">
+                    <tr class="filtro-campo" th:each="p : ${transportadoras}">
                             <td th:text="${p.nome}"></td>
                             <td th:text="${p.cnpj}"></td>
-                            <td th:text="${p.ativo}"></td>
-                            <td th:text="${p.pedidoEspecial}"></td>
                             <td>
-                                <form th:id="'formExcluir'+${p.id}" method="post" th:action="@{/unidade/{id}(id=${p.id})}">
-                                    <a th:href="@{/unidade/editar/{id}(id = ${p.id})}"  class="btn btn-warning">EDITAR</a> 
+                                <form th:id="'formExcluir'+${p.id}" method="post" th:action="@{/transportadora/{id}(id=${p.id})}">
+                                    <a th:href="@{/transportadora/editar/{id}(id = ${p.id})}"  class="btn btn-warning">EDITAR</a> 
 
                                     <input type="hidden" name="_method" value="DELETE" />
                                     <button type="submit" class="btn btn-danger"

@@ -83,8 +83,10 @@
 
                         <div class="form-group">
                             <label for="cidade" class="col-sm-2 control-label">Cidade</label>
-                            <div class="col-sm-2">
-                                <input type="text" th:field="*{cidade}" class="form-control" id="cidade" name="cidade"/>
+                            <div class="col-sm-2">                                
+                                <select th:field="*{cidade}" id="cidade" class="form-control" name="cidade">
+                                    <option th:each="cidade : ${cidades}" th:value="${cidade.nome}" th:text="${cidade.nome}">Cidade</option>
+                                </select>
                             </div>
                         </div>
 

@@ -6,8 +6,6 @@
 package br.projeto.estoque.cdm.model;
 
 import java.io.Serializable;
-import java.security.Timestamp;
-import java.util.Calendar;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,6 +55,13 @@ public class Produto implements Serializable {
     @NotNull
     @Column(columnDefinition = "numeric(14,2)")
     private Double preco;
+
+    //@NotNull
+    @Column(columnDefinition = "numeric(14,2)", name = "preco_sdc")
+    private Double precoSDC;
+
+    @NotNull
+    private Integer qtdcaixa;
 //
 //    // peso numeric(14,4) NOT NULL,
 //    @NotNull
@@ -138,12 +143,28 @@ public class Produto implements Serializable {
         this.nome = nome;
     }
 
+    public Integer getQtdcaixa() {
+        return qtdcaixa;
+    }
+
+    public void setQtdcaixa(Integer qtdcaixa) {
+        this.qtdcaixa = qtdcaixa;
+    }
+
     public String getDescricao() {
         return descricao;
     }
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Double getPrecoSDC() {
+        return precoSDC;
+    }
+
+    public void setPrecoSDC(Double precoSDC) {
+        this.precoSDC = precoSDC;
     }
 
     @Override

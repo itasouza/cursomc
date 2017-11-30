@@ -44,7 +44,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="filtro-campo" th:each="pd : ${pedidos}">
+                    <tr class="filtro-campo" th:each="pd : ${pedidos.content}">
                         <td th:text="${pd.id}"></td>
                         <td th:text="${pd.usuario.nome}"></td>
                         <td th:text="${#dates.format(pd.dataPedido, 'dd-MM-yyyy')}" ></td>
@@ -63,6 +63,30 @@
                     </tr>
                 </tbody>
             </table>
+            
+            <br />
+            <div class="table-pagination">
+                <ul class="pagination">
+                    <li th:class="${pedidos.number eq 0} ? 'disabled' : ''">
+                        <a th:if="${not pedidos.isFirst()}" th:href="@{${'/pedidosunidade'}(page=${pedidos.number-1},size=${pedidos.size})}">Previous</a>
+                        <a th:if="${pedidos.isFirst()}" href="javascript:void(0);">Previous</a>
+                    </li>
+
+                    <li th:each="pageNo : ${#numbers.sequence(0, pedidos.totalPages - 1)}" th:class="${pedidos.number eq pageNo}? 'active' : ''">
+                        <a th:if="${pedidos.number  eq pageNo}" href="javascript:void(0);">
+                            <span th:text="${pageNo + 1}"></span>
+                        </a>
+                        <a th:if="${not (pedidos.number  eq pageNo)}" th:href="@{${'/pedidosunidade'}(page=${pageNo},size=${pedidos.size})}">
+                            <span th:text="${pageNo + 1}"></span>
+                        </a>
+
+                    </li>
+                    <li th:class="${pedidos.number + 1 ge pedidos.totalPages} ? 'disabled' : ''">
+                        <a th:if="${not pedidos.isLast()}" th:href="@{${'/pedidosunidade'}(page=${pedidos.number+1},size=${pedidos.size})}">Next</a>
+                        <a th:if="${pedidos.isLast()}" href="javascript:void(0);">Next</a>
+                    </li>
+                </ul>
+            </div>
 
         </section>
         <section layout:fragment="js-extra">

@@ -9,8 +9,11 @@ import br.projeto.estoque.cdm.model.FaixaAtendimento;
 import br.projeto.estoque.cdm.model.Pedido;
 import br.projeto.estoque.cdm.model.Unidade;
 import br.projeto.estoque.cdm.repository.PedidoRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -84,9 +87,9 @@ public class PedidoService implements Services<Pedido> {
         }
     }
 
-    public List<Pedido> buscarPorUnidade(Unidade unidade) {
-        return this.repository.findByUnidade(unidade);
-    }
+//    public List<Pedido> buscarPorUnidade(Unidade unidade) {
+//        return this.repository.findByUnidade(unidade);
+//    }
 
     public void atualizarStatus(Long id, String statusPedido) {
         this.repository.updateStatusWhereId(statusPedido, id);
@@ -94,5 +97,20 @@ public class PedidoService implements Services<Pedido> {
 
     public void atualizarUnidade(Long idPedido, Unidade get) {
         this.repository.updateUnidadeWhereId(get, idPedido);
+    }
+
+    public Page<Pedido> buscarPorUnidade(Unidade unidade, Integer page, int size) {
+        return this.repository.findByUnidade(unidade, new PageRequest(page, size));
+    }
+    
+    public Page<Pedido> buscarAbertosEFinalizadosPorUnidade(Unidade unidade, Integer page, int size) {
+        ArrayList<String> status = new ArrayList<>();
+        status.add("ABERTO");
+        status.add("FINALIZADO");
+        return this.repository.findByUnidadeAndStatus(unidade, status, new PageRequest(page, size));
+    }
+
+    public void atualizarUnidadeStatus(Long idPedido, Unidade get, String status) {
+        this.repository.updateUnidadeWhereId(get, idPedido, status);
     }
 }

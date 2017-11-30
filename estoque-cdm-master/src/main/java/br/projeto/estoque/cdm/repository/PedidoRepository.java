@@ -9,6 +9,8 @@ import br.projeto.estoque.cdm.model.Pedido;
 import br.projeto.estoque.cdm.model.Unidade;
 import java.util.List;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +40,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Modifying
     @Query("UPDATE pedidos p SET p.unidade = :unidade WHERE p.id = :id")
     public void updateUnidadeWhereId(@Param("unidade") Unidade get, @Param("id") Long idPedido);
+
+    public Page<Pedido> findByUnidade(Unidade unidade, Pageable pageable);
+    
+    @Query("select p from pedidos p where p.unidade = :unidade and p.status in (:status)")
+    public Page<Pedido> findByUnidadeAndStatus(@Param("unidade") Unidade unidade, @Param("status") List<String> status, Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE pedidos p SET p.unidade = :unidade, p.status = :status WHERE p.id = :id")
+    public void updateUnidadeWhereId(@Param("unidade") Unidade get, @Param("id") Long idPedido, @Param("status") String status);
 }

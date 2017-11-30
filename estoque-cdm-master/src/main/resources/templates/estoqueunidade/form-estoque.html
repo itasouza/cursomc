@@ -73,19 +73,19 @@
                                 </select>
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="minimo" class="col-sm-2 control-label">Estoque Minímo</label>
+                            <div class="col-sm-2">
+                                <input type="text" th:field="*{estoqueMinimo}" class="form-control" id="minimo" name="minimo"/>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <!--<label th:if="*{id == null }" for="qtdestoque" class="col-sm-2 control-label">Quantidade Estoque</label>-->
                             <label th:if="*{id != null }" for="qtdestoque" class="col-sm-2 control-label">Estoque perdido</label>
                             <div th:if="*{id != null }" class="col-sm-2">
                                 <input type="text" th:field="*{estoqueFisico}" class="form-control" id="qtdestoque" name="qtdestoque"/>
-                            </div>
-                        </div>
-
-                        <div th:if="*{id == null }" class="form-group">
-                            <label for="minimo" class="col-sm-2 control-label">Estoque Minímo</label>
-                            <div class="col-sm-2">
-                                <input type="text" th:field="*{estoqueMinimo}" class="form-control" id="minimo" name="minimo"/>
                             </div>
                         </div>
 
@@ -179,7 +179,7 @@
                 </thead>
                 <tbody>
                     <tr class="filtro-campo" th:each="p : ${estoques}">
-                        <td th:text="${p.produto.id}" >NOME PRODUTO</td>
+                        <td th:text="${p.produto.codigo}" >CODIGO PRODUTO</td>
                         <td th:text="${p.produto.nome}" >NOME PRODUTO</td>
                         <td th:text="${p.estoqueFisico}" >QTD ESTOQUE</td>
                         <td th:text="${p.estoqueMinimo}" >QTD MINIMO</td>

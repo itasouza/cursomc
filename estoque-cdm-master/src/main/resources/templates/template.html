@@ -56,10 +56,12 @@ and open the template in the editor.
                                 <li><a th:if="${user.perfilAcesso.adm}" th:href="@{/unidade}">Cadastro de Unidade</a></li>
                                 <li><a th:if="${user.perfilAcesso.adm}" th:href="@{/usuario}">Cadastro de Usuário</a></li> 
                                 <li><a th:if="${user.perfilAcesso.adm}" th:href="@{/faixaatendimento}">Cadastro Faixa de Atendimento</a></li>
+                                <li><a th:if="${user.perfilAcesso.adm}" th:href="@{/cidade}">Cadastro Cidades</a></li>
+                                <li><a th:href="@{/transportadora}">Transportadora</a></li>
                                 <li><a th:href="@{/estoqueunidade}">Estoque</a></li>
                                 <li><a th:href="@{/pedidos}">Lista de Pedido (s) Cliente</a></li>
                                 <li><a th:href="@{/pedidosunidade}">Lista de Pedido (s) Fábrica</a></li>
-                                <li><a th:href="@{/pedidosunidade/novo}">Pedido de Compra</a></li>
+                                <li><a th:if="${!user.unidade.pedidoEspecial}" th:href="@{/pedidosunidade/novo}">Pedido de Compra</a></li>
                             </ul>
                         </li>
                     </ul>

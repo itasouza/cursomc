@@ -77,9 +77,13 @@ public class Pedido implements Serializable {
     @Column(name = "servico_entrega", columnDefinition = "character varying(1)")
     String servicoEntrega;
 
-    @NotNull
-    @Column(name = "forma_entrega", columnDefinition = "character varying(1)")
-    String formaEnrega;
+    //removido para deixar como pedidounidade
+    //@NotNull
+    //@Column(name = "forma_entrega", columnDefinition = "character varying(1)")
+    //String formaEntrega;
+    
+    @Column(name = "idformaentrega", columnDefinition = "integer")
+    Integer formaEntrega;
 
     @Column(name = "codigo_rastreio", columnDefinition = "character varying(50)")
     String codigoRastreio;
@@ -92,6 +96,18 @@ public class Pedido implements Serializable {
 
 //    @Enumerated(EnumType.STRING)
     String status;
+    
+    @Column(name = "idtransportadora", columnDefinition = "integer")
+    Integer transportadora;
+    
+    @Column(name = "nome_entrega")
+    String nomeEntrega;
+    
+    @Column(name = "rg_entrega")
+    String rgEntrega;
+    
+    @Column(name = "ordem_coleta_entrega")
+    String ordemColetaEntrega;
 
     public Pedido() {
         this.status = "ABERTO";
@@ -178,6 +194,9 @@ public class Pedido implements Serializable {
     }
 
     public Double getValorDesconto() {
+        if(this.valorDesconto==null) {
+            return 0d;
+        }
         return valorDesconto;
     }
 
@@ -217,13 +236,15 @@ public class Pedido implements Serializable {
         this.servicoEntrega = servicoEntrega;
     }
 
-    public String getFormaEnrega() {
-        return formaEnrega;
+    public Integer getFormaEntrega() {
+        return formaEntrega;
     }
 
-    public void setFormaEnrega(String formaEnrega) {
-        this.formaEnrega = formaEnrega;
+    public void setFormaEntrega(Integer formaEntrega) {
+        this.formaEntrega = formaEntrega;
     }
+
+    
 
     public String getCodigoRastreio() {
         return codigoRastreio;
@@ -274,4 +295,37 @@ public class Pedido implements Serializable {
         return true;
     }
 
+    public Integer getTransportadora() {
+        return transportadora;
+    }
+
+    public void setTransportadora(Integer transportadora) {
+        this.transportadora = transportadora;
+    }
+
+    public String getNomeEntrega() {
+        return nomeEntrega;
+    }
+
+    public void setNomeEntrega(String nomeEntrega) {
+        this.nomeEntrega = nomeEntrega;
+    }
+
+    public String getRgEntrega() {
+        return rgEntrega;
+    }
+
+    public void setRgEntrega(String rgEntrega) {
+        this.rgEntrega = rgEntrega;
+    }
+
+    public String getOrdemColetaEntrega() {
+        return ordemColetaEntrega;
+    }
+
+    public void setOrdemColetaEntrega(String ordemColetaEntrega) {
+        this.ordemColetaEntrega = ordemColetaEntrega;
+    }
+
+    
 }

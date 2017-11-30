@@ -10,13 +10,16 @@ import br.projeto.estoque.cdm.mensagem.TipoMensagem;
 import br.projeto.estoque.cdm.model.EstoqueUnidade;
 import br.projeto.estoque.cdm.model.ItensPedido;
 import br.projeto.estoque.cdm.model.Pedido;
+import br.projeto.estoque.cdm.model.PedidoUnidade;
 import br.projeto.estoque.cdm.model.Produto;
 import br.projeto.estoque.cdm.model.ProdutoUnidade;
 import br.projeto.estoque.cdm.model.Usuario;
 import br.projeto.estoque.cdm.service.EstoqueUnidadeService;
+import br.projeto.estoque.cdm.service.FormaEntregaService;
 import br.projeto.estoque.cdm.service.ItensPedidoService;
 import br.projeto.estoque.cdm.service.PedidoService;
 import br.projeto.estoque.cdm.service.ProdutoService;
+import br.projeto.estoque.cdm.service.TransportadoraService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -50,13 +54,19 @@ public class PedidoClienteController {
 
     @Autowired
     EstoqueUnidadeService estoqueUnidadeService;
+    
+    @Autowired
+    FormaEntregaService formaEntregaService;
+    
+    @Autowired
+    TransportadoraService transportadoraService;
 
     @GetMapping
-    public ModelAndView form(@AuthenticationPrincipal Usuario usuarioLogado) {
+    public ModelAndView form(@AuthenticationPrincipal Usuario usuarioLogado, @RequestParam(defaultValue = "0") Integer page) {
 
         ModelAndView model = new ModelAndView("pedido/form-pedido");
 
-        model.addObject("pedidos", this.pedidoService.buscarPorUnidade(usuarioLogado.getUnidade()));
+        model.addObject("pedidos", this.pedidoService.buscarAbertosEFinalizadosPorUnidade(usuarioLogado.getUnidade(), page, 10));
 
         model.addObject("user", usuarioLogado);
 
@@ -80,15 +90,19 @@ public class PedidoClienteController {
         model.addObject("pedido", this.pedidoService.buscarPorId(id));
         model.addObject("produtos", itens);
         model.addObject("user", usuarioLogado);
+        model.addObject("formasEntrega", this.formaEntregaService.buscarTodos());
+        model.addObject("transportadoras", this.transportadoraService.buscarTodos());
         return model;
     }
 
     @PostMapping("/finalizar/{id}")
-    public ModelAndView finalizarPedido(@PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+    public ModelAndView finalizarPedido(Pedido pedidoForm, @PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
         ModelAndView model = new ModelAndView("redirect:/pedidos");
         List<EstoqueUnidade> itensAlterados = new ArrayList<>();
 
         try {
+            
+            
             List<ItensPedido> itens = this.itensPedidoService.buscarPorPedido(id);
 
             for (ItensPedido i : itens) {
@@ -108,6 +122,29 @@ public class PedidoClienteController {
             for (EstoqueUnidade eu : itensAlterados) {
                 this.estoqueUnidadeService.salvarOuAtualizar(eu);
             }
+            
+            Pedido pedidoLocal = this.pedidoService.buscarPorId(id);
+            pedidoLocal.setFormaEntrega(pedidoForm.getFormaEntrega());
+            if(pedidoForm.getFormaEntrega().equals("1")) {
+                pedidoLocal.setCodigoRastreio(pedidoForm.getCodigoRastreio());                
+                pedidoLocal.setTransportadora(null);
+                pedidoLocal.setNomeEntrega(null);
+                pedidoLocal.setRgEntrega(null);
+                pedidoLocal.setOrdemColetaEntrega(null);
+            } else if(pedidoForm.getFormaEntrega().equals("2")) {
+                pedidoLocal.setCodigoRastreio(null);                
+                pedidoLocal.setTransportadora(pedidoForm.getTransportadora());
+                pedidoLocal.setNomeEntrega(pedidoForm.getNomeEntrega());
+                pedidoLocal.setRgEntrega(pedidoForm.getRgEntrega());
+                pedidoLocal.setOrdemColetaEntrega(pedidoForm.getOrdemColetaEntrega());
+            } else if(pedidoForm.getFormaEntrega().equals("3")) {
+                pedidoLocal.setCodigoRastreio(null);                
+                pedidoLocal.setTransportadora(null);
+                pedidoLocal.setNomeEntrega(pedidoForm.getNomeEntrega());
+                pedidoLocal.setRgEntrega(pedidoForm.getRgEntrega());
+                pedidoLocal.setOrdemColetaEntrega(null);
+            }
+            
             this.pedidoService.atualizarStatus(id, "FINALIZADO");
             this.msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Pedido número #" + id + " finalizado com sucesso.");
         } catch (Exception e) {

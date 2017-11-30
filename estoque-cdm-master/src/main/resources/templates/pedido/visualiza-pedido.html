@@ -18,6 +18,12 @@
                     <div class="panel-heading"><small th:text="${' Cidade : '+pedido.cliente.cidade}"> Cidade : Osasco </small></div>
                     <div class="panel-heading"><small th:text="${' Bairro : '+pedido.cliente.bairro}"> Bairro : Centro </small></div>	
                     <div class="panel-heading"><small th:text="${' Cep : '+pedido.cliente.cep}"> Cep : 45140-0600 </small></div>
+                    
+                    <div class="panel-heading"><small th:text="${' Valor Total : '+#numbers.formatDecimal(pedido.valorTotal, 1, 'DEFAULT', 2, 'DEFAULT')}"> Valor Total : 0,00 </small></div>
+                    <div class="panel-heading"><small th:text="${' Valor Desconto : '+#numbers.formatDecimal(pedido.valorDesconto, 1, 'DEFAULT', 2, 'DEFAULT')}"> Valor Desconto : 0,00 </small></div>
+                    <div class="panel-heading"><small th:text="${' Valor Frete : '+#numbers.formatDecimal(pedido.valorFrete, 1, 'DEFAULT', 2, 'DEFAULT')}"> Valor Frete : 0,00 </small></div>
+                    <div class="panel-heading"><small th:text="${' Valor Final : '+#numbers.formatDecimal(pedido.valorFinal, 1, 'DEFAULT', 2, 'DEFAULT')}"> Valor Final : 0,00 </small></div>
+                    
                     <div class="panel-heading"><small th:text="${' Status : '+(pedido.status == null ? 'ABERTO' : pedido.status)}"> aberto</small></div>
                 </div>
 
@@ -26,12 +32,16 @@
                         <tr>
                             <th>Nome do Produto</th>
                             <th>Qtd.Produto</th>
+                            <th>Valor Unitário</th>
+                            <th>Valor Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="p : ${produtos}">
                             <td th:text="${p.descricaoItem}"></td>
-                            <td th:text="${p.qtde}" ></td>
+                            <td th:text="${#numbers.formatInteger(p.qtde,1,'POINT')}" ></td>                            
+                            <td th:text="${#numbers.formatDecimal(p.valorUnitario, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td th:text="${#numbers.formatDecimal(p.valorTotal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -41,13 +51,80 @@
                     </div>
 
                     <div class="panel-body">
-                        <form method="post" th:action="@{'/pedidos/finalizar/'+${pedido.id}}">
+                        <form method="post" th:action="@{'/pedidos/finalizar/'+${pedido.id}}" id="formPedido">
                             <div class="span6">
                                 <button onClick="printDiv()" class="btn btn-success glyphicon glyphicon-print" type="submit">  Impressão</button>
                                 <a th:href="@{/pedidos}" class="btn btn-warning">
                                     Retornar
                                 </a>
-                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null}" class="btn btn-danger" type="submit">  Pedido entreque</button>
+                                
+                                <a th:if="${pedido.status == 'ABERTO' || pedido.status == null}" href="#"  class="btn btn-danger" data-toggle="modal" data-target="#myModal">Pedido entreque?</a>
+                                
+<!--                                <button th:if="${pedido.status == 'ABERTO' || pedido.status == null}" class="btn btn-danger" type="submit">  Pedido entreque</button>-->
+                            </div>
+                            
+                            <div class="container">
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" role="dialog">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Informações da Entrega</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <label for="formaEntrega" class="col-sm-3 control-label">Forma Entrega</label>
+                                                    <div class="col-sm-3">
+                                                        <select th:field="${pedido.formaEntrega}" class="form-control" id="formaEntrega" name="formaEntrega" onchange="selecionaEntrega();" onload="selecionaEntrega();">
+                                                            <option th:each="item : ${formasEntrega}" th:value="${item.id}" th:text="${item.nome}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divRastreio">
+                                                    <label for="codigoRastreio" class="col-sm-3 control-label">Serviço Entrega(Código de Rastreio)</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" th:field="${pedido.codigoRastreio}" class="form-control" id="codigoRastreio" name="codigoRastreio"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divTransportadora">
+                                                    <label for="transportadora" class="col-sm-3 control-label">Transportadora</label>
+                                                    <div class="col-sm-3">
+                                                        <select th:field="${pedido.transportadora}" class="form-control" name="transportadora">
+                                                            <option th:each="item : ${transportadoras}" th:value="${item.id}" th:text="${item.nome}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divNome">
+                                                    <label for="nomeEntrega" class="col-sm-3 control-label">Pessoa Entrega</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" th:field="${pedido.nomeEntrega}" class="form-control" id="nomeEntrega" name="nomeEntrega"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divRG">
+                                                    <label for="rgEntrega" class="col-sm-3 control-label">RG Entrega</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" th:field="${pedido.rgEntrega}" class="form-control" id="rgEntrega" name="rgEntrega"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divOrdemColeta">
+                                                    <label for="ordemColetaEntrega" class="col-sm-3 control-label">Ordem de Coleta</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" th:field="${pedido.ordemColetaEntrega}" class="form-control" id="ordemColetaEntrega" name="ordemColetaEntrega"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                                            <button class="btn btn-primary" type="submit" name="opcao" value="">Gravar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                         </form>
 
@@ -58,8 +135,41 @@
             </div>
             <small th:if="${pedido==null}">Nenhum pedido localizado</small>
             <section layout:fragment="js-extra">
-                <script th:src="@{/js/print.js}"></script>        
+                <script th:src="@{/js/print.js}"></script>   
+                <link rel="stylesheet" type="text/css" th:href="@{/css/sweetalert/sweetalert.css}" media="screen,projection" />
+                <script th:src="@{/js/sweetalert/sweetalert.min.js}"></script> 
+                <script th:src="@{/js/sweetalert/confirmacaoRecebimento.js}"></script>   
             </section>
+
+            <script>
+                $("#divRastreio").show();
+                $("#divTransportadora").hide();
+                $("#divNome").hide();
+                $("#divRG").hide();
+                $("#divOrdemColeta").hide();
+                function selecionaEntrega() {
+                    var formaEntrega = $("#formaEntrega").val();
+                    if (formaEntrega == "1") {
+                        $("#divRastreio").show();
+                        $("#divTransportadora").hide();
+                        $("#divNome").hide();
+                        $("#divRG").hide();
+                        $("#divOrdemColeta").hide();
+                    } else if(formaEntrega == "2"){
+                        $("#divRastreio").hide();
+                        $("#divTransportadora").show();
+                        $("#divNome").show();
+                        $("#divRG").show();
+                        $("#divOrdemColeta").show();
+                    } else if(formaEntrega == "3"){
+                        $("#divRastreio").hide();
+                        $("#divTransportadora").hide();
+                        $("#divNome").show();
+                        $("#divRG").show();
+                        $("#divOrdemColeta").hide();
+                    }
+                }
+            </script>
 
 
     </body>

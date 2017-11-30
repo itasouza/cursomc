@@ -65,7 +65,7 @@ public class ProdutoUnidade {
     }
 
     public Double getPrecoTotal() {
-        return (this.produto.getPreco() * this.quantidade);
+        return (this.produto.getPrecoSDC() * (this.quantidade * this.produto.getQtdcaixa() ));
     }
 
     public void setPrecoTotal(Double precoTotal) {

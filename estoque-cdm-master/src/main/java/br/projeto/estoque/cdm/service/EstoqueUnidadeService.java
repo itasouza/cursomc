@@ -73,4 +73,5 @@ public class EstoqueUnidadeService implements Services<EstoqueUnidade> {
         return this.repository.findByProdutoAndUnidade(produto,unidade);
     }
 
+
 }

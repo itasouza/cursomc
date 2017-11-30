@@ -9,6 +9,7 @@ import br.projeto.estoque.cdm.mensagem.FormMensagem;
 import br.projeto.estoque.cdm.mensagem.TipoMensagem;
 import br.projeto.estoque.cdm.model.FaixaAtendimento;
 import br.projeto.estoque.cdm.model.Usuario;
+import br.projeto.estoque.cdm.service.CidadeService;
 import br.projeto.estoque.cdm.service.FaixaAtendimentoService;
 import br.projeto.estoque.cdm.service.UnidadeService;
 import java.util.ArrayList;
@@ -44,6 +45,9 @@ public class FaixaAtendimentoController {
 
     @Autowired
     UnidadeService unidadeService;
+    
+    @Autowired
+    CidadeService cidadeService;
 
     @GetMapping(value = {"", "/", "/{pagina}"})
     public ModelAndView form(@PathVariable(value = "pagina", required = false) Integer pagina,
@@ -77,6 +81,7 @@ public class FaixaAtendimentoController {
         model.addObject("paginas", pgn);
         model.addObject("unidades", this.unidadeService.buscarTodos());
         model.addObject("user", usuarioLogado);
+        model.addObject("cidades", this.cidadeService.buscarTodos());
 
         return model;
     }

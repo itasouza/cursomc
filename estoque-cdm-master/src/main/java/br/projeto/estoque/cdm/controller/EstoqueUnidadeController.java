@@ -64,29 +64,49 @@ public class EstoqueUnidadeController {
         ModelAndView model = new ModelAndView("redirect:/estoqueunidade");
         System.out.println("Salvando");
         try {
-            if (estoque.getId() == null) {
+            EstoqueUnidade estoqueExiste = this.estoqueUnidadeService.buscarPorProdutoEUnidade(estoque.getProduto(), estoque.getUnidade());
+                if(estoqueExiste != null && !estoqueExiste.getId().equals(estoque.getId())) {
+                    msg = new FormMensagem(TipoMensagem.ERRO).addMensagem("Estoque já registrado para esta unidade");
+                    attributes.addFlashAttribute("msg", msg);
+                    return model;
+                }
+            
+            if (estoque.getId() == null) {                
                 System.out.println("Novo registro");
                 estoque.setEstoqueFisico(0);
                 estoque = this.estoqueUnidadeService.salvarOuAtualizar(estoque);
                 msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Estoque #" + estoque.getId() + " salvo com sucesso");
-            } else if (estoque.getEstoqueFisico() > 0) {
+            } else {
                 System.out.println("Registro de perda");
                 // registro de perda
                 EstoqueUnidade eu = this.estoqueUnidadeService.buscarPorId(estoque.getId());
-                if (eu.getEstoqueFisico() < estoque.getEstoqueFisico()) {
+                
+                if (estoque.getEstoqueFisico() > 0 && eu.getEstoqueFisico() < estoque.getEstoqueFisico()) {
                     System.out.println("Sem estoque para registrar perda");
                     // nao tem a quantidade para remover
                     msg = new FormMensagem(TipoMensagem.ERRO).addMensagem("Estoque insuficiente para registro de perda");
-                } else {
+                    attributes.addFlashAttribute("msg", msg);
+                    return model;
+                }
+                
+                if(estoque.getEstoqueFisico() > 0) {
                     System.out.println("Tem estoque suficiente "+estoque.getProduto().getId());
                     // registrar perda
-                    eu.setEstoqueFisico(eu.getEstoqueFisico() - estoque.getEstoqueFisico());
-                    this.estoqueUnidadeService.salvarOuAtualizar(eu);
+                    eu.setEstoqueFisico(eu.getEstoqueFisico() - estoque.getEstoqueFisico());                    
                     RegistroPerda perda = new RegistroPerda(estoque.getEstoqueFisico(), estoque.getMsgPerda(), estoque.getProduto());
                     // registrnado a perda
                     this.perdaService.salvarOuAtualizar(perda);
-                    msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Perda registrada com sucesso");
                 }
+                
+                if(estoque.getEstoqueMinimo()==null && estoque.getEstoqueMinimo()<0) {
+                    msg = new FormMensagem(TipoMensagem.ERRO).addMensagem("Estoque mínimo deve ser maior que zero");
+                    attributes.addFlashAttribute("msg", msg);
+                    return model;
+                }
+                eu.setEstoqueMinimo(estoque.getEstoqueMinimo());
+                this.estoqueUnidadeService.salvarOuAtualizar(eu);
+                
+                msg = new FormMensagem(TipoMensagem.SUCESSO).addMensagem("Perda registrada com sucesso");
             }
         } catch (Exception e) {
             System.out.println("Erro " + e);

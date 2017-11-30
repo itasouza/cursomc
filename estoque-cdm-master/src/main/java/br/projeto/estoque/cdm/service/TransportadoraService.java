@@ -5,8 +5,8 @@
  */
 package br.projeto.estoque.cdm.service;
 
-import br.projeto.estoque.cdm.model.Produto;
-import br.projeto.estoque.cdm.repository.ProdutoRepository;
+import br.projeto.estoque.cdm.model.Transportadora;
+import br.projeto.estoque.cdm.repository.TransportadoraRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -14,27 +14,27 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * 
+ *
  */
 @Service
-public class ProdutoService implements Services<Produto> {
+public class TransportadoraService implements Services<Transportadora> { 
 
     @Autowired
-    ProdutoRepository repository;
+    TransportadoraRepository repository;
 
     @Override
-    public Produto buscarPorId(Long id) {
+    public Transportadora buscarPorId(Long id) {
         return this.repository.findOne(id);
     }
 
     @Override
-    public List<Produto> buscarTodos() {
+    public List<Transportadora> buscarTodos() {        
         Sort sort = new Sort(Sort.Direction.ASC, "nome");
         return this.repository.findAll(sort);
     }
 
     @Override
-    public Produto salvarOuAtualizar(Produto obj) {
+    public Transportadora salvarOuAtualizar(Transportadora obj) {
         return this.repository.save(obj);
     }
 
@@ -44,7 +44,7 @@ public class ProdutoService implements Services<Produto> {
     }
 
     @Override
-    public void deletar(Produto obj) {
+    public void deletar(Transportadora obj) {
         this.repository.delete(obj);
     }
 

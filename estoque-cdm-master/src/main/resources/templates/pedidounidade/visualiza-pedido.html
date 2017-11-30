@@ -27,15 +27,17 @@
                         <tr>
                             <th>Código Produto</th>
                             <th>Nome do Produto</th>
-                            <th>Qtd.Produto</th>
+                            <th>Qtd.caixa</th>
+                            <th>Qtd por caixa</th>
                             <th>Preço total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="p : ${pedido.produtos}">
-                            <td th:text="${p.produto.id}"></td>
+                            <td th:text="${p.produto.codigo}"></td>
                             <td th:text="${p.produto.nome}"></td>
-                            <td th:text="${p.quantidade}" ></td>
+                            <td th:text="${#numbers.formatInteger(p.quantidade,1,'POINT')}" ></td>
+                            <td th:text="${p.produto.qtdcaixa}" ></td>
                             <td th:text="${#numbers.formatDecimal(p.precoTotal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                         </tr>
                     </tbody>
@@ -92,6 +94,33 @@
                                                         <input type="text" th:field="${pedido.codigoRastreio}" class="form-control" id="codigoRastreio" name="codigoRastreio"/>
                                                     </div>
                                                 </div>
+                                                <div class="row" id="divTransportadora">
+                                                    <label for="transportadora" class="col-sm-3 control-label">Transportadora</label>
+                                                    <div class="col-sm-3">
+                                                        <select th:field="${pedido.transportadora}" class="form-control" name="transportadora">
+                                                            <option th:each="item : ${transportadoras}" th:value="${item.id}" th:text="${item.nome}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divNome">
+                                                    <label for="nomeEntrega" class="col-sm-3 control-label">Pessoa Entrega</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" th:field="${pedido.nomeEntrega}" class="form-control" id="nomeEntrega" name="nomeEntrega"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divRG">
+                                                    <label for="rgEntrega" class="col-sm-3 control-label">RG Entrega</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" th:field="${pedido.rgEntrega}" class="form-control" id="rgEntrega" name="rgEntrega"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divOrdemColeta">
+                                                    <label for="ordemColetaEntrega" class="col-sm-3 control-label">Ordem de Coleta</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" th:field="${pedido.ordemColetaEntrega}" class="form-control" id="ordemColetaEntrega" name="ordemColetaEntrega"/>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -118,12 +147,31 @@
             </section>
 
             <script>
+                $("#divRastreio").show();
+                $("#divTransportadora").hide();
+                $("#divNome").hide();
+                $("#divRG").hide();
+                $("#divOrdemColeta").hide();
                 function selecionaEntrega() {
                     var formaEntrega = $("#formaEntrega").val();
                     if (formaEntrega == "1") {
                         $("#divRastreio").show();
-                    } else {
+                        $("#divTransportadora").hide();
+                        $("#divNome").hide();
+                        $("#divRG").hide();
+                        $("#divOrdemColeta").hide();
+                    } else if(formaEntrega == "2"){
                         $("#divRastreio").hide();
+                        $("#divTransportadora").show();
+                        $("#divNome").show();
+                        $("#divRG").show();
+                        $("#divOrdemColeta").show();
+                    } else if(formaEntrega == "3"){
+                        $("#divRastreio").hide();
+                        $("#divTransportadora").hide();
+                        $("#divNome").show();
+                        $("#divRG").show();
+                        $("#divOrdemColeta").hide();
                     }
                 }
             </script>

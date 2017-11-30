@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{template}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <script th:src="@{/js/jquery.mask.min.js}"></script>
+        <script language="JavaScript">
+            function enviardadoscdm() {
+
+                if (document.getElementById("nome").value == "") {
+                    alert("Preencha campo nome corretamente!");
+                    document.getElementById("nome").focus();
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <!--formulário-->
+            <form class="form-horizontal" th:action="@{/cidade}" method="post"  name="dados" onSubmit="return enviardadoscdm();">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Cadastro de cidade </h3>
+                    </div>
+
+                    <input type="hidden" th:field="${cidade.id}"/>
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <label for="nome" class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-4">
+                                <input type="text" th:field="${cidade.nome}" class="form-control" id="nome" name="nome"/>
+                            </div>
+                        </div>                                                                                                                                  
+                       
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary">Gravar</button>
+                                <a th:if="${cidade.id != null}" th:href="@{/cidade}" class="btn btn-danger">Cancelar</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <!--formulário-->
+
+
+            <form class="form-horizontal">
+                <div class="campobusca">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control filtro-input" id="busca" ng-model="busca" placeholder="Consulta Registro"/>
+                    </div>
+                </div>
+                </br>
+            </form>
+
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Operações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="filtro-campo" th:each="p : ${cidades}">
+                            <td th:text="${p.nome}"></td>
+                            <td>
+                                <form th:id="'formExcluir'+${p.id}" method="post" th:action="@{/cidade/{id}(id=${p.id})}">
+                                    <a th:href="@{/cidade/editar/{id}(id = ${p.id})}"  class="btn btn-warning">EDITAR</a> 
+
+                                    <input type="hidden" name="_method" value="DELETE" />
+                                    <button type="submit" class="btn btn-danger"
+                                            th:onclick="'confirmarExclusao(event, '+${p.id}+', \''+${p.nome}+'\')'">EXCLUIR</button>
+
+                                </form>
+
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+        </section>
+        <section layout:fragment="js-extra">
+            <link rel="stylesheet" type="text/css" th:href="@{css/sweetalert/sweetalert.css}" media="screen,projection" />
+            <script th:src="@{js/sweetalert/sweetalert.min.js}"></script>
+            <script th:src="@{js/sweetalert/confirmacaoExclusao.js}"></script>
+        </section>
+    </body>
+</html>

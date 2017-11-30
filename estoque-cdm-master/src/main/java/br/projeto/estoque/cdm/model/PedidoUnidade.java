@@ -77,6 +77,19 @@ public class PedidoUnidade implements Serializable {
     @ManyToOne
     @JoinColumn(columnDefinition = "integer", name = "idformaentrega")
     FormaEntrega formaEntrega;
+    
+    @ManyToOne
+    @JoinColumn(columnDefinition = "integer", name = "idtransportadora")
+    Transportadora transportadora;
+    
+    @Column(name = "nome_entrega")
+    String nomeEntrega;
+    
+    @Column(name = "rg_entrega")
+    String rgEntrega;
+    
+    @Column(name = "ordem_coleta_entrega")
+    String ordemColetaEntrega;
 
 //    codigo_rastreio character varying(50),
     @Column(name = "codigo_rastreio", columnDefinition = "character varying(50)")
@@ -219,4 +232,37 @@ public class PedidoUnidade implements Serializable {
         }
     }
 
+    public Transportadora getTransportadora() {
+        return transportadora;
+    }
+
+    public void setTransportadora(Transportadora transportadora) {
+        this.transportadora = transportadora;
+    }
+
+    public String getNomeEntrega() {
+        return nomeEntrega;
+    }
+
+    public void setNomeEntrega(String nomeEntrega) {
+        this.nomeEntrega = nomeEntrega;
+    }
+
+    public String getRgEntrega() {
+        return rgEntrega;
+    }
+
+    public void setRgEntrega(String rgEntrega) {
+        this.rgEntrega = rgEntrega;
+    }
+
+    public String getOrdemColetaEntrega() {
+        return ordemColetaEntrega;
+    }
+
+    public void setOrdemColetaEntrega(String ordemColetaEntrega) {
+        this.ordemColetaEntrega = ordemColetaEntrega;
+    }
+
+    
 }
