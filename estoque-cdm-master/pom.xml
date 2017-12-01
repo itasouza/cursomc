@@ -4,7 +4,7 @@
     <groupId>br.projeto.estoque</groupId>
     <artifactId>estoque-cdm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>CDM</name>
     <description/>
     <parent>
