@@ -99,6 +99,8 @@ public class ProdutoController {
         return new ModelAndView("redirect:/produto");
     }
 
+    
+    
     @GetMapping("/editar/{id}")
     public ModelAndView editar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
 

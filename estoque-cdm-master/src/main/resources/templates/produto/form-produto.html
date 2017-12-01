@@ -182,6 +182,9 @@
                             <label for="dlog" class="col-sm-2 control-label">Preço Dlog</label>
                             <div class="col-sm-1">
                                 <input type="text"th:field="${produto.precoDLOG}" class="form-control" id="dlog" name="dlog"/>
+                                
+                                
+                                
                             </div>
                         </div>
 
@@ -236,14 +239,15 @@
                         <td th:text="${p.nome}">{{registro.estado}}</td>
                         <td th:text="${p.profissional}"></td>
                         <td th:text="${p.publicar}"></td>
-                        <td th:text="${p.preco}">{{registro.uf}}</td>
+                        <td th:text="${#numbers.formatDecimal(p.preco, 1, 'DEFAULT', 2, 'DEFAULT')}">{{registro.uf}}</td>
                         <td th:text="${p.peso}">{{registro.uf}}</td>
                         <td th:text="${p.cubagem}">{{registro.bairro}}</td>
-                        <td th:text="${p.precoSDC}">{{registro.cepinicial}}</td>
-                        <td th:text="${p.precoCDM}">{{registro.cepfinal}}</td>
-                        <td th:text="${p.precoDLOG}">{{registro.bairro}}</td>
+                        <td th:text="${#numbers.formatDecimal(p.precoSDC, 1, 'DEFAULT', 2, 'DEFAULT')}">{{registro.cepinicial}}</td>
+                        <td th:text="${#numbers.formatDecimal(p.precoCDM, 1, 'DEFAULT', 2, 'DEFAULT')}">{{registro.cepfinal}}</td>
+                        <td th:text="${#numbers.formatDecimal(p.precoDLOG, 1, 'DEFAULT', 2, 'DEFAULT')}">{{registro.bairro}}</td>
                         <td th:text="${p.qtdcaixa}">{{registro.cepinicial}}</td>
                         <td>
+                        
                             <form th:id="'formExcluir'+${p.id}" method="post" th:action="@{/produto/{id}(id=${p.id})}">
                                 <a th:href="@{/produto/editar/{id}(id = ${p.id})}"  class="btn btn-warning">EDITAR</a> 
 
