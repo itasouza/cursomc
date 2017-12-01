@@ -125,6 +125,27 @@
                                        onkeyup="FormataCnpj(this,event)" onblur="if(!validarCNPJ(this.value)){alert('CNPJ Informado é inválido'); this.value='';}" name="cnpj"/>
                             </div>
                         </div>
+                        
+                        <!-- 
+                        <div class="form-group">
+                            <label for="tipo" class="col-sm-2 control-label">Tipo</label>
+                            <select th:field="${unidade.tipoUnidade}">
+                                <option th:text="CDM" th:value="CDM"/>
+                                <option th:text="DLOG" th:value="DLOG"/>
+                            </select>
+                        </div>
+                         -->
+                        
+                        <div class="form-group">
+                            <label for="tipo" class="col-sm-2 control-label">Tipo</label>
+                            <div class="col-sm-2">
+                              <select th:field="${unidade.tipoUnidade}" id="tipo" class="form-control">
+                                  <option th:text="CDM" th:value="CDM"/>
+                                  <option th:text="DLOG" th:value="DLOG"/>
+                              </select>
+                            </div>
+                        </div>
+                        
 
                         <div class="form-group">
                             <label for="endereco" class="col-sm-2 control-label">Endereço</label>
@@ -235,6 +256,7 @@
                         <th>Nome</th>
                         <th>CNPJ</th>
                         <th>Ativo</th>
+                        <th>Tipo</th>
                         <th>Pedido especial</th>
                         <th>Operações</th>
                     </tr>
@@ -244,6 +266,7 @@
                             <td th:text="${p.nome}"></td>
                             <td th:text="${p.cnpj}"></td>
                             <td th:text="${p.ativo}"></td>
+                            <td th:text="${p.tipoUnidade}"></td>
                             <td th:text="${p.pedidoEspecial}"></td>
                             <td>
                                 <form th:id="'formExcluir'+${p.id}" method="post" th:action="@{/unidade/{id}(id=${p.id})}">

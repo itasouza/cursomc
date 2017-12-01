@@ -9,12 +9,14 @@ import br.projeto.estoque.cdm.model.Produto;
 import br.projeto.estoque.cdm.repository.ProdutoRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * 
+ *
  */
 @Service
 public class ProdutoService implements Services<Produto> {
@@ -46,6 +48,14 @@ public class ProdutoService implements Services<Produto> {
     @Override
     public void deletar(Produto obj) {
         this.repository.delete(obj);
+    }
+
+    public long contarRegistros() {
+        return this.repository.count();
+    }
+
+    public Page<Produto> buscarPaginacao(PageRequest page) {
+        return this.repository.findAll(page);
     }
 
 }

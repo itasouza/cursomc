@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * 
+ *
  */
 @Entity(name = "tb_unidade")
 public class Unidade implements Serializable {
@@ -48,8 +48,9 @@ public class Unidade implements Serializable {
     private String telefone;
     @Column(columnDefinition = "character varying (50)")
     private String email;
-    
-    
+    @Column
+    private String tipoUnidade;
+
     @NotNull
     private Boolean ativo;
 
@@ -73,6 +74,14 @@ public class Unidade implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTipoUnidade() {
+        return tipoUnidade;
+    }
+
+    public void setTipoUnidade(String tipoUnidade) {
+        this.tipoUnidade = tipoUnidade;
     }
 
     public Long getId() {
@@ -99,72 +108,71 @@ public class Unidade implements Serializable {
         this.ativo = ativo;
     }
 
-    
     public String getEndereco() {
-		return endereco;
-	}
+        return endereco;
+    }
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
 
-	public String getNumero() {
-		return numero;
-	}
+    public String getNumero() {
+        return numero;
+    }
 
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
 
-	public String getCidade() {
-		return cidade;
-	}
+    public String getCidade() {
+        return cidade;
+    }
 
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
 
-	public String getEstado() {
-		return estado;
-	}
+    public String getEstado() {
+        return estado;
+    }
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-	public String getCep() {
-		return cep;
-	}
+    public String getCep() {
+        return cep;
+    }
 
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
 
-	public String getContato() {
-		return contato;
-	}
+    public String getContato() {
+        return contato;
+    }
 
-	public void setContato(String contato) {
-		this.contato = contato;
-	}
+    public void setContato(String contato) {
+        this.contato = contato;
+    }
 
-	public String getTelefone() {
-		return telefone;
-	}
+    public String getTelefone() {
+        return telefone;
+    }
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	@Override
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 43 * hash + Objects.hashCode(this.id);

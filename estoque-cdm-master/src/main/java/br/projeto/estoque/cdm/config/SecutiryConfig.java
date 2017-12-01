@@ -15,7 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 /**
  *
- * 
+ *
  */
 @EnableWebSecurity
 public class SecutiryConfig extends WebSecurityConfigurerAdapter {
@@ -66,6 +66,7 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/contato").hasAuthority(Authority.ROOT.name())
                 .antMatchers("/telefone").hasAuthority(Authority.ROOT.name())
                 .antMatchers("/email").hasAuthority(Authority.ROOT.name())
+                .antMatchers("/produto").hasAuthority(Authority.ROOT.name())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

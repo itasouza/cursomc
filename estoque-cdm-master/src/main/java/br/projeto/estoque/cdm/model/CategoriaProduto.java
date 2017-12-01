@@ -14,9 +14,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * 
+ *
  */
-@Entity
+@Entity(name = "categoria_produto")
 public class CategoriaProduto implements Serializable {
 
     @Id
@@ -31,6 +31,9 @@ public class CategoriaProduto implements Serializable {
     @NotNull
     @Column(columnDefinition = "boolean")
     private Boolean ativo = true;
+
+    public CategoriaProduto() {
+    }
 
     public CategoriaProduto(Long id, String nome) {
         this.id = id;
